@@ -15,10 +15,6 @@ func TestKAT(t *testing.T) {
 	testKAT(t, NewDilithium2(false), "Dilithium2")
 	testKAT(t, NewDilithium3(false), "Dilithium3")
 	testKAT(t, NewDilithium5(false), "Dilithium5")
-	//Randomized: get the same randomness as random_bytes (for now uses crypto.Rand)
-	//testKAT(t, NewDilithium2(true))
-	//testKAT(t, NewDilithium3(true))
-	//testKAT(t, NewDilithium5(true))
 }
 
 func testKAT(t *testing.T, d *Dilithium, name string) {
