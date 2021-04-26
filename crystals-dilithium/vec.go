@@ -18,6 +18,12 @@ func vecAdd(u, v Vec, L int) Vec {
 	return w
 }
 
+func (v Vec) vecFreeze(L int) {
+	for i := 0; i < L; i++ {
+		v[i].freeze()
+	}
+}
+
 //VecPointWise perfroms point wise mult (to be used with NTT)
 func vecAccPointWise(u, v Vec, L int) Poly {
 	var w, t Poly

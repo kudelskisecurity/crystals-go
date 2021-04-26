@@ -117,7 +117,7 @@ func montgomeryReduce(a int64) int32 {
 func (p *Poly) tomont() {
 	//	f := int32((uint64(1) << 32) % uint64(q))
 	for i := 0; i < n; i++ {
-		p[i] = montgomeryReduce(int64(p[i]) * int64(f))
+		p[i] = montgomeryReduce(int64(p[i]))
 	}
 }
 

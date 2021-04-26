@@ -41,13 +41,15 @@ func (d *Dilithium) KeyGen(seed []byte) ([]byte, []byte) {
 	}
 	s1hat := s1.copy()
 	s1hat.ntt(L)
+	s2hat := s2.copy()
+	s2hat.ntt(K)
 
 	t, t1, t0 := make(Vec, K), make(Vec, K), make(Vec, K)
 	for i := 0; i < K; i++ {
 		t[i] = vecAccPointWise(Ahat[i], s1hat, L)
-		t[i].reduce()
+		s2hat[i].tomont()
+		t[i] = add(t[i], s2hat[i])
 		t[i].invntt()
-		t[i] = add(t[i], s2[i])
 		t[i].addQ()
 		t1[i], t0[i] = polyPower2Round(t[i])
 	}
@@ -141,9 +143,10 @@ rej:
 	chat.ntt()
 
 	for i := 0; i < L; i++ {
+		yhat[i].tomont()
 		z[i] = montMul(chat, s1hat[i])
-		z[i].invntt() //can't we reverse, first Add yhat then invNTT?
-		z[i] = add(z[i], y[i])
+		z[i] = add(z[i], yhat[i])
+		z[i].invntt()
 		z[i].reduce()
 	}
 	if !z.vecIsBelow(d.params.GAMMA1-BETA, L) {
