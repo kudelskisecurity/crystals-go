@@ -1,17 +1,12 @@
 package kyber
 
 import (
-	"archive/zip"
 	"bufio"
 	"bytes"
 	"crypto/aes"
 	"encoding/hex"
 	"fmt"
-	"io"
-	"io/ioutil"
-	"net/http"
 	"os"
-	"path"
 	"strconv"
 	"strings"
 	"testing"
@@ -76,39 +71,49 @@ func (g *randomBytes) randombytes(x []byte) {
 }
 
 func TestKAT(t *testing.T) {
-
-	GOLDEN_ZIP := "https://pq-crystals.org/kyber/data/kyber-submission-nist-round3.zip"
-	os.Mkdir("testdata", 0755)
-	cached := "testdata/" + path.Base(GOLDEN_ZIP)
-	zipfile, err := zip.OpenReader(cached)
-	if err != nil {
-		t.Logf("Retrieving golden KAT zip from %s", GOLDEN_ZIP)
-		resp, _ := http.Get(GOLDEN_ZIP)
-		body, _ := ioutil.ReadAll(resp.Body)
-		ioutil.WriteFile(cached, body, 0644)
-		zipfile, _ = zip.OpenReader(cached)
-		resp.Body.Close()
+	/**
+		GOLDEN_ZIP := "https://pq-crystals.org/kyber/data/kyber-submission-nist-round3.zip"
+		os.Mkdir("testdata", 0755)
+		cached := "testdata/" + path.Base(GOLDEN_ZIP)
+		zipfile, err := zip.OpenReader(cached)
+		if err != nil {
+			t.Logf("Retrieving golden KAT zip from %s", GOLDEN_ZIP)
+			resp, _ := http.Get(GOLDEN_ZIP)
+			body, _ := ioutil.ReadAll(resp.Body)
+			ioutil.WriteFile(cached, body, 0644)
+			zipfile, _ = zip.OpenReader(cached)
+			resp.Body.Close()
+		}
+		testKAT(t, zipfile, NewKyber512())
+		testKAT(t, zipfile, NewKyber768())
+		testKAT(t, zipfile, NewKyber1024())
 	}
-	testKAT(t, zipfile, NewKyber512())
-	testKAT(t, zipfile, NewKyber768())
-	testKAT(t, zipfile, NewKyber1024())
+	**/
+
+	testKAT(t, NewKyber512())
+	testKAT(t, NewKyber768())
+	testKAT(t, NewKyber1024())
 }
 
-func testKAT(t *testing.T, zipfile *zip.ReadCloser, k *Kyber) {
+func testKAT(t *testing.T, k *Kyber) {
+	//	func testKAT(t *testing.T, zipfile *zip.ReadCloser, k *Kyber) {
 
+	/**
 	var katfile io.ReadCloser
-	gotkat := false
-	for _, f := range zipfile.File {
-		GOLDEN_KAT := fmt.Sprintf("PQCkemKAT_%d.rsp", k.params.SIZESK)
-		if strings.HasSuffix(f.Name, GOLDEN_KAT) {
-			katfile, _ = f.Open()
-			gotkat = true
-			break
+		gotkat := false
+		for _, f := range zipfile.File {
+			GOLDEN_KAT := fmt.Sprintf("PQCkemKAT_%d.rsp", k.params.SIZESK)
+			if strings.HasSuffix(f.Name, GOLDEN_KAT) {
+				katfile, _ = f.Open()
+				gotkat = true
+				break
+			}
 		}
-	}
-
-	if !gotkat {
-		t.Fatal("failed to get golden KAT data")
+	**/
+	GOLDEN_KAT := fmt.Sprintf("PQCkemKAT_%d.rsp", k.params.SIZESK)
+	katfile, err := os.Open("testdata/" + GOLDEN_KAT)
+	if err != nil {
+		t.Fatal(err)
 	}
 
 	r := bufio.NewReader(katfile)
