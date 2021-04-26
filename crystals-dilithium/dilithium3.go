@@ -99,8 +99,7 @@ func (d *Dilithium) Sign(msg []byte, packedSK []byte) []byte {
 	var c Poly
 
 rej:
-	if nonce > 1000 {
-		//what number should we use?
+	if nonce > 500 { //Failing after 500 trials happens with probability close to 2^(-128).
 		println("Sign ran out of trials.")
 		return nil
 	}

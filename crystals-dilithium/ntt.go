@@ -130,3 +130,10 @@ func barretReduce(a int32) int32 {
 	t *= int32(q)
 	return a - t
 }
+
+func (p *Poly) fromMont() {
+	inv := uint64(8265825)
+	for i := uint(0); i < n; i++ {
+		p[i] = int32((uint64(p[i]) * inv) % q)
+	}
+}

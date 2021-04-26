@@ -1,10 +1,10 @@
 package dilithium
 
-//Recommended params (mode 3) and consts
+//Recommended params and consts
 const (
 	n            = 256
 	q            = 8380417  // 2²³ - 2¹³ + 1
-	qInv         = 58728449 // -q^(-1) mod 2^32 //41978 ?
+	qInv         = 58728449 // -q^(-1) mod 2^32
 	d            = 13
 	polySizeT1   = 320
 	polySizeT0   = 416
