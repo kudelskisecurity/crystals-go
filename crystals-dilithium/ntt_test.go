@@ -68,6 +68,8 @@ func TestNTT2(t *testing.T) {
 
 	p.ntt()
 	q.ntt()
+	p.reduce()
+	q.reduce()
 	res := add(p, q)
 	res.invntt()
 	res.addQ()
@@ -207,6 +209,27 @@ func TestNTT8(t *testing.T) {
 	q.ntt()
 	res := add(p, q)
 	res.freeze()
+	res.invntt()
+	res.addQ()
+	res.fromMont()
+
+	if !res.equal(expected) {
+		t.Fatal("Failed")
+	}
+}
+
+func TestNTT9(t *testing.T) {
+	var seed [SEEDBYTES]byte
+	seed[0] = 1
+	p := polyUniform(seed, uint16(0))
+	q := polyUniform(seed, uint16(1))
+
+	expected := add(p, q)
+	expected.addQ()
+
+	p.ntt()
+	q.ntt()
+	res := add(p, q)
 	res.invntt()
 	res.addQ()
 	res.fromMont()

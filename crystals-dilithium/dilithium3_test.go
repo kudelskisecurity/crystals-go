@@ -187,3 +187,42 @@ func TestBadSize(t *testing.T) {
 		t.Fatal("Verifies with wrong input")
 	}
 }
+
+func TestYzero(t *testing.T) {
+	d := NewDilithium3(false)
+	K := d.params.K
+	L := d.params.L
+
+	var mu [2 * SEEDBYTES]byte
+	cRand.Read(mu[:])
+
+	var hc, zero, rho [SEEDBYTES]byte
+	cRand.Read(rho[:])
+	Ahat := expandSeed(rho, K, L)
+
+	y := make(Vec, L)
+	yhat := y.copy()
+	yhat.ntt(L)
+
+	w, w1, w0 := make(Vec, K), make(Vec, K), make(Vec, K)
+	for i := 0; i < K; i++ {
+		w[i] = vecAccPointWise(Ahat[i], yhat, L)
+		w[i].reduce()
+		w[i].invntt()
+		w[i].addQ()
+		w1[i], w0[i] = polyDecompose(w[i], d.params.GAMMA2)
+	}
+
+	state := sha3.NewShake256()
+	state.Write(mu[:])
+	state.Write(packW1(w1, K, d.params.POLYSIZEW1, d.params.GAMMA2))
+	state.Read(hc[:])
+	state.Reset()
+
+	state.Write(mu[:])
+	state.Write(packW1(w0, K, d.params.POLYSIZEW1, d.params.GAMMA2))
+	state.Read(zero[:])
+	if !bytes.Equal(zero[:], hc[:]) {
+		t.Fatal("We missed a fault")
+	}
+}

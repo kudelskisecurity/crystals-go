@@ -121,6 +121,12 @@ func (p *Poly) tomont() {
 	}
 }
 
+func (p *Poly) barretReduce() {
+	for i := 0; i < n; i++ {
+		p[i] = barretReduce(p[i])
+	}
+}
+
 //Computes the integer in {-(q-1)/2,...,(q-1)/2} congruent to a modulo q
 func barretReduce(a int32) int32 {
 	v := int32(((uint32(1) << 26) + uint32(q/2)) / uint32(q))

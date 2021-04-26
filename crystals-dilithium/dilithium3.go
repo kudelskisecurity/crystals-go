@@ -121,10 +121,18 @@ rej:
 		w1[i], w0[i] = polyDecompose(w[i], d.params.GAMMA2)
 	}
 
-	var hc [SEEDBYTES]byte
+	var hc, zero [SEEDBYTES]byte
 	state.Write(mu[:])
 	state.Write(packW1(w1, K, d.params.POLYSIZEW1, d.params.GAMMA2))
 	state.Read(hc[:])
+	state.Reset()
+
+	state.Write(mu[:])
+	state.Write(packW1(w0, K, d.params.POLYSIZEW1, d.params.GAMMA2))
+	state.Read(zero[:])
+	if bytes.Equal(zero[:], hc[:]) {
+		return nil
+	}
 	state.Reset()
 
 	c = challenge(hc[:], d.params.T)
