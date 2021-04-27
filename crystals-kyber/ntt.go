@@ -89,6 +89,13 @@ func montgomeryReduce(a int32) int16 {
 	return int16(v)
 }
 
+func (p *Poly) fromMont() {
+	inv := uint32(169)
+	for i := uint(0); i < n; i++ {
+		p[i] = int16((uint32(p[i]) * inv) % q)
+	}
+}
+
 //Multiplication folowed by Montgomery reduction
 func fqmul(a, b int16) int16 {
 	return montgomeryReduce(int32(a) * int32(b))

@@ -80,26 +80,32 @@ func (k *Kyber) Encrypt(msg []byte, r []byte, packedPK []byte) []byte {
 	ep := make(Vec, K)
 	for i := 0; i < K; i++ {
 		ep[i] = polyGetNoise(eta2, r[:], byte(i+K))
+		ep[i].ntt()
 	}
 	epp := polyGetNoise(eta2, r[:], byte(2*K))
+	epp.ntt()
 
 	//var u Vec
 	u := make(Vec, K)
 	for i := 0; i < K; i++ {
 		u[i] = vecPointWise(Ahat[i], sp, K)
-		u[i].reduce()
-		u[i].invntt()
+		u[i].toMont()
 		u[i] = add(u[i], ep[i])
+		u[i].invntt()
 		u[i].reduce()
-		u[i].freeze()
+		u[i].fromMont()
 	}
 
-	v := vecPointWise(pk.T, sp, K)
-	v.invntt()
-	v = add(v, epp)
 	m := polyFromMsg(msg)
+	m.ntt()
+
+	v := vecPointWise(pk.T, sp, K)
+	v.toMont()
+	v = add(v, epp)
 	v = add(v, m)
+	v.invntt()
 	v.reduce()
+	v.fromMont()
 
 	c := make([]byte, k.params.SIZEC)
 	copy(c[:], u.compress(k.params.DU, k.params.COMPPOLYSIZE_DU, K))
@@ -118,11 +124,14 @@ func (k *Kyber) Decrypt(c []byte, packedSK []byte) []byte {
 	uhat := decompressVec(c[:K*COMPPOLYSIZE_DU], k.params.DU, COMPPOLYSIZE_DU, K)
 	uhat.ntt(K)
 	v := decompressPoly(c[K*COMPPOLYSIZE_DU:], k.params.DV)
+	v.ntt()
 
 	m := vecPointWise(sk.S, uhat, K)
-	m.invntt()
-
+	m.toMont()
 	m = sub(v, m)
+	m.invntt()
 	m.reduce()
+	m.fromMont()
+
 	return polyToMsg(m)
 }

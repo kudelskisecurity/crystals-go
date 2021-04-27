@@ -1,7 +1,6 @@
 package kyber
 
 import (
-	"bytes"
 	"crypto/rand"
 	"crypto/subtle"
 
@@ -82,7 +81,7 @@ func (k *Kyber) Decaps(c []byte, packedSK []byte) []byte {
 	hState.Write(c2[:])
 	copy(kc[32:], hState.Sum(nil))
 
-	subtle.ConstantTimeCopy(bytes.Compare(c, c2), kc[:32], sk.Z[:])
+	subtle.ConstantTimeCopy(1-subtle.ConstantTimeCompare(c, c2), kc[:32], sk.Z[:])
 
 	var ss [32]byte
 	kdfState := sha3.NewShake256()
