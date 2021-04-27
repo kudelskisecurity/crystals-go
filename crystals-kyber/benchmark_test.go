@@ -18,6 +18,7 @@ func BenchmarkRSA(b *testing.B) {
 func BenchmarkRSAEnc(b *testing.B) {
 	sk, _ := rsa.GenerateKey(rand.Reader, nbits)
 	var msg [50]byte
+	rand.Read(msg[:])
 	for n := 0; n < b.N; n++ {
 		rsa.EncryptOAEP(sha256.New(), rand.Reader, &sk.PublicKey, msg[:], nil)
 	}
@@ -26,6 +27,7 @@ func BenchmarkRSAEnc(b *testing.B) {
 func BenchmarkRSADec(b *testing.B) {
 	sk, _ := rsa.GenerateKey(rand.Reader, nbits)
 	var msg [50]byte
+	rand.Read(msg[:])
 	c, _ := rsa.EncryptOAEP(sha256.New(), rand.Reader, &sk.PublicKey, msg[:], nil)
 	for n := 0; n < b.N; n++ {
 		rsa.DecryptOAEP(sha256.New(), rand.Reader, sk, c, nil)
