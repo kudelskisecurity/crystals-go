@@ -69,3 +69,51 @@ They can also be *nil*, in which case the randomness will be generated during us
 
 ## Security
 
+Our library stands out because of its security properties. Among the vulnerabilities reported on the original implementation, we integrate countermeasures for most of them, providing a library that is both *theoretically* and *practically* secure. We predict that new attacks will be published as the candidates are refined, and expect changes in the code to occur as the security of our library is treated as a continuous process. 
+
+We recall that side-channel attacks are high-risk threats and encourage users to prefer libraries with strong implementation security, such as our library, over implementations that lack these guarrantees.
+
+### Dashboard SCA (work in progress)
+
+|    | Alg | Attack            | Paper                   | 
+| -- | ---- |----------------- |:----------------------- |
+|    | | TA                |                         |
+| ✔️| D | Timing of decryption                  | [:link:][dan19]          |
+| ✔️| D | Timing of re-encryption check                  | [:link:][guo20]          |
+|    | | CM                |                         |
+| ✖️| KG | Cache access monitoring                  | [:link:][fac18]          |
+| ✖️| S | Cache access monitoring                  | [:link:][fac18]          |
+| ✔️| D|  Cache access monitoring                | [:link:][rav20]          |
+|    | | FA                |                         |
+| ✔️| KG |  Skip of secret addition               | [:link:][bbk19]          |
+| ✔️| S |   Skip of mask addition             | [:link:][rav19]          |
+| ✖️| D |   Skip of decryption check              | [:link:][pp21]          |
+| ✖️| D |   Skip of +Q/2 instruction              | [:link:][pp21]          |
+| ✖️| KG |  Zero of secret               | [:link:][bbk19]          |
+| ✖️| KG |  Zero of noise               | [:link:][val17]          |
+| ✖️| KG |  Zero of A               | [:link:][val17]          |
+| ✖️| S |  Zero of randomness               | [:link:][bbk19]          |
+| ✖️| KG |  Zero of noise               | [:link:][val17]          |
+| ✔️| KG |  Zero of nonce               | [:link:][rav18]          |
+| ✔️| E |  Zero of nonce               | [:link:][rav18]          |
+| ✔️| S |  Zero of mask               | [:link:][esp18]          |
+| ✔️| S |  Loop-abort of mask addition                | [:link:][bbk19]          |
+| ✔️| KG |  Loop abort of noise addition               | [:link:][esp18]          |
+| ✔️| S |  Err. in hash polynomial               | [:link:][bp18]          |
+| ✔️| S |  Err. in expand function               | [:link:][bp18]          |
+
+
+
+Attacks marked with a red cross are the ones left, a green checkmark implies that a defense is implemented.
+
+[dan19]: https://doi.org/10.1145/3338467.3358948
+[guo20]: https://eprint.iacr.org/2020/743
+[fac18]: https://ieeexplore.ieee.org/document/8494855
+[rav20]: https://eprint.iacr.org/2020/1559
+[bbk19]: https://eprint.iacr.org/2016/415
+[rav19]: https://eprint.iacr.org/2019/769
+[rav18]: https://eprint.iacr.org/2018/211
+[val17]: https://doi.org/10.1145/3178291.3178294
+[pp21]: https://eprint.iacr.org/2021/064
+[esp18]: https://eprint.iacr.org/2016/449.pdf
+[bp18]: https://eprint.iacr.org/2018/355
