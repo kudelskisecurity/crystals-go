@@ -64,7 +64,7 @@ A feature of Dilithium is to be available both in randomized or deterministic mo
 For example, `d := NewDilithium3(false)` will create a Dilithium instance with parameters set to the security level 3, and a deterministic signature.
 The signing and verification procedure is the same for both and follows the aforementionned flow.
 
-This leads us to the final feature of the API regarding randomization. Both Kyber and Dilithium use random numbers. The concerned methods accept seed and coins of 32 bytes as argument, which allows for reproducibility for example, or is useful if the user does not trust the environment to generate good randomness and wants to use randomness from their own source.
+This leads us to the final feature of the API regarding randomization. Both Kyber and Dilithium use random numbers. The concerned methods accept as argument seed or coins of 32 bytes to be used as random material, which allows for reproducibility for example, or is useful if the user does not trust the environment to generate good randomness and wants to use randomness from their own source.
 They can also be *nil*, in which case the randomness will be generated during using Go's official crypto/rand library.
 
 ## Security
