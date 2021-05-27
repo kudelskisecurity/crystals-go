@@ -14,7 +14,7 @@ The API of Kyber and Dilihtium is very similar, and can be divided in two steps:
 
 The user first has to define which level of security they want to work with by creating an instance of Kyber or Dilithium among (in increasing level of security) Kyber512, Kyber768, Kyber1024 and Dilithium2, Dilithium3, Dilithium5. For example:
 
-```go=1
+```go
 k := NewKyber512() //Creates a Kyber instance with light security level 
 d := Dilithium3() //Creates a Dilithium instance with recommended/medium security level
 ```
@@ -27,17 +27,17 @@ The core functions of Kyber, a KEM, are a tuple KeyGen, Encaps, and Decaps. The 
 Translated to code, a KEM protocol between Alice and Bob using our API looks like this:
 
 Alice and Bob agreed on using the recommended security level. Alice can now generate a public and private key pair by calling:
-```go=1
+```go
 k := NewKyber768()
 pk, sk := k.KeyGen(seed)
 ```
 Once the keys are generated, Alice can send her public key to Bob, who encapsulates a shared secret using:
-```go=1
+```go
 k := NewKyber768()
 c, ss := k.Encaps(pk, coins)
 ```
 The ciphertext is transmitted to Alice for her to recover the value of ss with:
-```go=3
+```go
 ss := k.Decaps(sk, c) //Matches the value held by Bob
 ```
 
@@ -48,17 +48,17 @@ For Dilithium, the DSA, the main methods are KeyGen, Sign, and Verify, which ver
 Similarly, we can translate the Dilithium protocol to code. W.L.O.G, we choose Alice to be the signer, and Bob the verifier, and assume that they agreed on using the light security level.
 
 Alice starts by generating a key pair:
-```go=1
+```go
 d := Dilithium2() //Creates a Dilithium instance with recommended security level
 pk, sk := d.KeyGen()
 ```
 She can then sign a message of her choice using:
-```go=3
+```go
 msg := []byte("This is a message.")
 sig := d.Sign(sk, msg)
 ```
 Then transmit her public key, message, and signature to Bob for him to verify it with:
-```go=1
+```go
 d := Dilithium2()
 verified := d.Verify(pk, sig, msg) //verified is true for honest executions
 ```
