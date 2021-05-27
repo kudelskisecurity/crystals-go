@@ -21,6 +21,7 @@ d := Dilithium3() //Creates a Dilithium instance with recommended/medium securit
 
 The newly created instance defines all parameters used internaly. In a second step, the user can now invoke our generic methods on an instance of Kyber or Dilithium. 
 
+### Kyber
 The core functions of Kyber, a KEM, are a tuple KeyGen, Encaps, and Decaps. The key generation function returns a public key that can be openly disclosed, and a secret key that should remain private. The encapsulation function is used to generate and encrypt a shared secret given a public key. Secret that can be recovered using the associated secret key. No one excpet the secret key holder can recover the value of the shared secret.
 
 Translated to code, a KEM protocol between Alice and Bob using our API looks like this:
@@ -39,6 +40,8 @@ The ciphertext is transmitted to Alice for her to recover the value of ss with:
 ```go=3
 ss := k.Decaps(sk, c) //Matches the value held by Bob
 ```
+
+### Dilithium
 
 For Dilithium, the DSA, the main methods are KeyGen, Sign, and Verify, which very intuitively, correspond to the verification key (public) and signing key (secret) generation, the signature algorithm, and the verification algorithm. The signature, given a message and a signing key, produces a signature that is verifiable against the associated public verification key. Dilithium signatures are said to be unforgeable, menaing that it is extremely hard to create a valid signature without actually holding the signing key. In that case, Dilihtium can be used as an authentication mechanism, as a valid signature is the proof that the signer is the secret key holder. If the message is tampred, the signature will not verify anymore, so Dilithium can also be used to enforce message integrity.
 
@@ -64,8 +67,33 @@ A feature of Dilithium is to be available both in randomized or deterministic mo
 For example, `d := NewDilithium3(false)` will create a Dilithium instance with parameters set to the security level 3, and a deterministic signature.
 The signing and verification procedure is the same for both and follows the aforementionned flow.
 
+### Random inputs
+
 This leads us to the final feature of the API regarding randomization. Both Kyber and Dilithium use random numbers. The concerned methods accept as argument seed or coins of 32 bytes to be used as random material, which allows for reproducibility for example, or is useful if the user does not trust the environment to generate good randomness and wants to use randomness from their own source.
 They can also be *nil*, in which case the randomness will be generated during using Go's official crypto/rand library.
+
+### Helpers
+
+The output sizes of Kyber and Dilithium (keys, signature,...) vary based on the security level.
+We provide for both schemes getter functions that return the size of the keys and ciphertext or signature structures based on the security level of the instance used.
+They can be called as follows:
+
+```go
+sizePk := k.SizePk()
+sizeSk := k.SizeSk()
+sizeC := k.SizeC()
+```
+for Kyber, or 
+```go
+sizePk := k.SizePk()
+sizeSk := k.SizeSk()
+sizeSig := d.SizeSig()
+```
+for Dilithium.
+
+Finally, we noticed that some packages (for example: [binary](https://golang.org/pkg/encoding/binary/) are only compatible with constant-size objects.
+Our API outputs slices, which are variable-sized arrays, and function calls in Go return non-constant values, breaking the compatibility with such packages.
+For applications where resources need to be allocated using constant-size structures, we hardcode the size of our scheme's outputs for each security level, and expose them as constants as part of the Kyber/Dilithium packages. Have a look at the [param.go](https://github.com/kudelskisecurity/crystals-go/blob/main/crystals-dilithium/params.go#L19) file for an example.
 
 ## Security
 
