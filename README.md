@@ -104,7 +104,7 @@ We recall that side-channel attacks are high-risk threats and encourage users to
 
 
 
-Attacks marked with a red cross are the ones left, a green checkmark implies that a defense is implemented.
+Attacks marked with a gray cross are the ones left, a green checkmark implies that a defense is implemented.
 
 [dan19]: https://doi.org/10.1145/3338467.3358948
 [guo20]: https://eprint.iacr.org/2020/743
