@@ -1,22 +1,71 @@
 # Go Post Quantum Safe Lib
 
-Kyber and Dilithium are implemented in this library.
-
-Kyber512, Kyber768 and Kyber1024.
-Dilithium2, Dilithium3 and Dilithium5.
+This library offers a fast, secure, and easy to use implementation of the post-quantum candidates of the CRYSTALS suite.
+It contains Kyber, a key-encapsulation mechanism whose goal is to securly transmit symmetric key material over an insecure channel, and Dilithium, a digital signature algorithm that produces a signature that can be verified against a key, and can be used towards authentication or integrity. 
 
 ## API
 
-After creating a Kyber instance `k := NewKyber512()`, one can generate public/private key pair with `k.KeyGen(seed)`. `k.Encaps(seed, pk)` and `k.Decaps(c, sk)` will output the same shared secret (shared key). All seeds can be `nil` which will result in a call to Go's crypto random number generator, or given by the user, for reproducibility for example.
+To begin with, the crystal-go module can be installed via:
+```shell
+go get -u github.com/kudelskisecurity/crystals-go
+```
 
-When creating a Dilithium instance, a boolean is given as parameter to indicate whether the signature is going to be randomized. By default, the boolean is set to true.
+The API of Kyber and Dilihtium is very similar, and can be divided in two steps:
 
+The user first has to define which level of security they want to work with by creating an instance of Kyber or Dilithium among (in increasing level of security) Kyber512, Kyber768, Kyber1024 and Dilithium2, Dilithium3, Dilithium5. For example:
+
+```go=1
+k := NewKyber512() //Creates a Kyber instance with light security level 
+d := Dilithium3() //Creates a Dilithium instance with recommended/medium security level
+```
+
+The newly created instance defines all parameters used internaly. In a second step, the user can now invoke our generic methods on an instance of Kyber or Dilithium. 
+
+The core functions of Kyber, a KEM, are a tuple KeyGen, Encaps, and Decaps. The key generation function returns a public key that can be openly disclosed, and a secret key that should remain private. The encapsulation function is used to generate and encrypt a shared secret given a public key. Secret that can be recovered using the associated secret key. No one excpet the secret key holder can recover the value of the shared secret.
+
+Translated to code, a KEM protocol between Alice and Bob using our API looks like this:
+
+Alice and Bob agreed on using the recommended security level. Alice can now generate a public and private key pair by calling:
+```go=1
+k := NewKyber768()
+pk, sk := k.KeyGen(seed)
+```
+Once the keys are generated, Alice can send her public key to Bob, who encapsulates a shared secret using:
+```go=1
+k := NewKyber768()
+c, ss := k.Encaps(pk, coins)
+```
+The ciphertext is transmitted to Alice for her to recover the value of ss with:
+```go=3
+ss := k.Decaps(sk, c) //Matches the value held by Bob
+```
+
+For Dilithium, the DSA, the main methods are KeyGen, Sign, and Verify, which very intuitively, correspond to the verification key (public) and signing key (secret) generation, the signature algorithm, and the verification algorithm. The signature, given a message and a signing key, produces a signature that is verifiable against the associated public verification key. Dilithium signatures are said to be unforgeable, menaing that it is extremely hard to create a valid signature without actually holding the signing key. In that case, Dilihtium can be used as an authentication mechanism, as a valid signature is the proof that the signer is the secret key holder. If the message is tampred, the signature will not verify anymore, so Dilithium can also be used to enforce message integrity.
+
+Similarly, we can translate the Dilithium protocol to code. W.L.O.G, we choose Alice to be the signer, and Bob the verifier, and assume that they agreed on using the light security level.
+
+Alice starts by generating a key pair:
+```go=1
+d := Dilithium2() //Creates a Dilithium instance with recommended security level
+pk, sk := d.KeyGen()
+```
+She can then sign a message of her choice using:
+```go=3
+msg := []byte("This is a message.")
+sig := d.Sign(sk, msg)
+```
+Then transmit her public key, message, and signature to Bob for him to verify it with:
+```go=1
+d := Dilithium2()
+verified := d.Verify(pk, sig, msg) //verified is true for honest executions
+```
+
+A feature of Dilithium is to be available both in randomized or deterministic mode. When creating a Dilithium instance, a boolean is given as parameter to indicate which one to use. By default, the boolean is set to true, setting Dilithium to the randomized mode, but passing *false* as parameter will choose the deterministic mode.
 For example, `d := NewDilithium3(false)` will create a Dilithium instance with parameters set to the security level 3, and a deterministic signature.
-Then, calling `d.Sign(msg, sk)` will produce a signature that can be verified by a public key holder with `d.Verify(msg, sig, pk)`.
+The signing and verification procedure is the same for both and follows the aforementionned flow.
 
-## Useful links
+This leads us to the final feature of the API regarding randomization. Both Kyber and Dilithium use random numbers. The concerned methods accept seed and coins of 32 bytes as argument, which allows for reproducibility for example, or is useful if the user does not trust the environment to generate good randomness and wants to use randomness from their own source.
+They can also be *nil*, in which case the randomness will be generated during using Go's official crypto/rand library.
 
- - NIST main page: https://csrc.nist.gov/projects/post-quantum-cryptography/post-quantum-cryptography-standardization
- - Report: https://gitlab.kudelski.com/raynal/pdm-pqs-ks / https://www.overleaf.com/9177217519hdfmqtfqjftc
- - Planning: https://docs.google.com/spreadsheets/d/1YVRPUMhHPuHq88FCPMVFGGxTSWeBKc2plH3mqTFtd-I/edit?usp=sharing
- - Slides: https://docs.google.com/presentation/d/1q3WEXPQ8ifaNpDrz3pTqSVzDzXIgrifaIAuUT8WHO0s/edit?usp=sharing
+## Security
+
