@@ -262,7 +262,7 @@ func OneTimeRunTestPackSNTT(t *testing.T) {
 func TestNTT(t *testing.T) {
 	var seed [SEEDBYTES]byte
 	for i := 0; i < 100; i++ {
-		rand.Read(seed[:])
+		cRand.Read(seed[:])
 		p := polyUniform(seed, uint16(0))
 		expected := p
 		expected.addQ()
@@ -284,7 +284,7 @@ func TestNTT(t *testing.T) {
 func TestNTT0(t *testing.T) {
 	var seed [SEEDBYTES]byte
 	for i := 0; i < 100; i++ {
-		rand.Read(seed[:])
+		cRand.Read(seed[:])
 		p := polyUniform(seed, uint16(0))
 
 		expected := p
@@ -304,7 +304,7 @@ func TestNTT0(t *testing.T) {
 
 func TestNTTAdd(t *testing.T) {
 	var seed [SEEDBYTES]byte
-	rand.Read(seed[:])
+	cRand.Read(seed[:])
 	p := polyUniform(seed, uint16(0))
 	p2 := polyUniform(seed, uint16(1))
 
@@ -325,7 +325,7 @@ func TestNTTAdd(t *testing.T) {
 
 func TestNTTAdd0(t *testing.T) {
 	var seed [SEEDBYTES]byte
-	rand.Read(seed[:])
+	cRand.Read(seed[:])
 	p := polyUniform(seed, uint16(0))
 	p2 := polyUniform(seed, uint16(1))
 	p3 := add(p, p2)
