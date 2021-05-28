@@ -8,6 +8,7 @@ import (
 var K = 2
 
 func TestExpand(t *testing.T) {
+	t.Parallel()
 	var seed [32]byte
 	copy(seed[:], []byte("very random seed that I will use"))
 	A := expandSeed(seed[:], false, K)
@@ -37,6 +38,7 @@ func randVec() Vec {
 }
 
 func TestPacking(t *testing.T) {
+	t.Parallel()
 	v := randVec()
 	pv := pack(v, K)
 	v2 := unpack(pv, K)
@@ -46,6 +48,7 @@ func TestPacking(t *testing.T) {
 }
 
 func TestEqual(t *testing.T) {
+	t.Parallel()
 	u, v := randVec(), randVec()
 	if u.equal(v, K) {
 		t.Fatal("equal failed")

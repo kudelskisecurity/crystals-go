@@ -7,6 +7,7 @@ import (
 )
 
 func TestPKESuite(t *testing.T) {
+	t.Parallel()
 	testKeyGenRep(t, NewKyber512())
 	testKeyGenRep(t, NewKyber768())
 	testKeyGenRep(t, NewKyber1024())

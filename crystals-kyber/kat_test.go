@@ -69,6 +69,7 @@ func (g *randomBytes) randombytes(x []byte) {
 }
 
 func TestKAT(t *testing.T) {
+	t.Parallel()
 	/**
 		GOLDEN_ZIP := "https://pq-crystals.org/kyber/data/kyber-submission-nist-round3.zip"
 		os.Mkdir("testdata", 0755)

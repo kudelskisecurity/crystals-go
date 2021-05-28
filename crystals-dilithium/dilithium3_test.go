@@ -10,6 +10,7 @@ import (
 )
 
 func TestKeyGen(t *testing.T) {
+	t.Parallel()
 	d := NewDilithium2(false)
 	K := d.params.K
 	var seed [32]byte
@@ -36,6 +37,7 @@ func TestKeyGen(t *testing.T) {
 }
 
 func TestSign(t *testing.T) {
+	t.Parallel()
 	d := NewDilithium2(false)
 	var seed [32]byte
 	rand := cRand.Reader
@@ -52,6 +54,7 @@ func TestSign(t *testing.T) {
 
 //TestManySign is used for FA.
 func TestManySign(t *testing.T) {
+	t.Parallel()
 	d := NewDilithium2(false)
 	var seed [32]byte
 	rand := cRand.Reader
@@ -69,7 +72,7 @@ func TestManySign(t *testing.T) {
 }
 
 func TestChallenge(t *testing.T) {
-
+	t.Parallel()
 	d := NewDilithium3(false)
 	K := d.params.K
 	var key [32]byte
@@ -122,6 +125,7 @@ func TestChallenge(t *testing.T) {
 }
 
 func TestVerify(t *testing.T) {
+	t.Parallel()
 	d := NewDilithium2(false)
 	var seed [32]byte
 	rand := cRand.Reader
@@ -136,6 +140,7 @@ func TestVerify(t *testing.T) {
 }
 
 func TestVerifAnotherMSG(t *testing.T) {
+	t.Parallel()
 	d := NewDilithium2(false)
 	var seed [32]byte
 	rand := cRand.Reader
@@ -151,6 +156,7 @@ func TestVerifAnotherMSG(t *testing.T) {
 }
 
 func TestPack(t *testing.T) {
+	t.Parallel()
 	d := NewDilithium2(false)
 	pk, sk := d.KeyGen(nil)
 	pk2 := d.PackPK(d.UnpackPK(pk))
@@ -164,6 +170,7 @@ func TestPack(t *testing.T) {
 }
 
 func TestRandomized(t *testing.T) {
+	t.Parallel()
 	d := NewDilithium2()
 	d2 := NewDilithium2(true)
 	if d.params.RANDOMIZED+d2.params.RANDOMIZED != 2 {
@@ -176,6 +183,7 @@ func TestRandomized(t *testing.T) {
 }
 
 func TestBadSize(t *testing.T) {
+	t.Parallel()
 	d := NewDilithium2()
 	k := []byte("Hi")
 	s := d.Sign(nil, k)
@@ -189,6 +197,7 @@ func TestBadSize(t *testing.T) {
 }
 
 func TestYzero(t *testing.T) {
+	t.Parallel()
 	d := NewDilithium3(false)
 	K := d.params.K
 	L := d.params.L

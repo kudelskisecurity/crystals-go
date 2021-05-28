@@ -8,6 +8,7 @@ import (
 )
 
 func TestKEMSuite(t *testing.T) {
+	t.Parallel()
 	testKeyGenKEMRep(t, NewKyber512())
 	testKeyGenKEMRep(t, NewKyber768())
 	testKeyGenKEMRep(t, NewKyber1024())

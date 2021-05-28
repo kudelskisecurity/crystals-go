@@ -9,12 +9,9 @@ linters:
   #  - gocritic
   #  - gosec
   #  - ifshort
-  #  - paralleltest
   #  - predeclared
   #  - revive
   #  - stylecheck
-  #  - testpackage
-  #  - thelper
   #  - unconvert
   enable:
     - asciicheck
@@ -49,6 +46,7 @@ linters:
     - nestif
     - nilerr
     - nolintlint
+    - paralleltest
     - prealloc
     - rowserrcheck
     - staticcheck

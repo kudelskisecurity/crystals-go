@@ -10,6 +10,7 @@ import (
 /** Test Poly **/
 
 func TestPoly(t *testing.T) {
+	t.Parallel()
 	var seed [32]byte
 	rand := cRand.Reader
 	io.ReadFull(rand, seed[:])
@@ -34,7 +35,7 @@ func TestPoly(t *testing.T) {
 }
 
 func TestFreeze(t *testing.T) {
-
+	t.Parallel()
 	a := int32(q + 1)
 	if freeze(a) != 1 {
 		t.Fatal("Freeze did not work")
@@ -93,6 +94,7 @@ func testNTT(t *testing.T) {
 }
 
 func TestRandPoly(t *testing.T) {
+	t.Parallel()
 	var seed [32]byte
 	copy(seed[:], []byte("very random seed that I will use"))
 	var p, p2 Poly
@@ -116,6 +118,7 @@ func TestRandPoly(t *testing.T) {
 }
 
 func TestSamples(t *testing.T) {
+	t.Parallel()
 	var seed [64]byte
 	rand := cRand.Reader
 	io.ReadFull(rand, seed[:])
@@ -137,6 +140,7 @@ func TestSamples(t *testing.T) {
 }
 
 func TestExpand(t *testing.T) {
+	t.Parallel()
 	var seed [32]byte
 	copy(seed[:], []byte("very random seed that I will use"))
 	K, L := 6, 5
@@ -157,6 +161,7 @@ func TestExpand(t *testing.T) {
 }
 
 func TestMult(t *testing.T) {
+	t.Parallel()
 	var p, p2 Poly
 
 	p[0] = 1
@@ -181,6 +186,7 @@ func TestMult(t *testing.T) {
 /** Test Utils **/
 
 func TestPow2Round(t *testing.T) {
+	t.Parallel()
 	r := int32(rand.Intn(q - 1))
 	r1, r0 := power2Round(r)
 	if (-(1 << (d - 1)) >= r0) || (r0 >= 1<<(d-1)) {
@@ -192,6 +198,7 @@ func TestPow2Round(t *testing.T) {
 }
 
 func TestDecompose(t *testing.T) {
+	t.Parallel()
 	g2 := int32(q-1) / 88
 	r := int32(rand.Intn(int(g2 + 1)))
 	r1, r0 := decompose(r, g2)
@@ -207,6 +214,7 @@ func TestDecompose(t *testing.T) {
 /** Test Hints **/
 
 func TestMakeHints(t *testing.T) {
+	t.Parallel()
 	d := NewDilithium3(false)
 	r := int32(rand.Intn(q))
 	g2 := int32(d.params.GAMMA2)
@@ -222,6 +230,7 @@ func TestMakeHints(t *testing.T) {
 }
 
 func TestUseHints(t *testing.T) {
+	t.Parallel()
 	d := NewDilithium3(false)
 	r := int32(rand.Intn(q))
 	g2 := d.params.GAMMA2
@@ -261,6 +270,7 @@ func OneTimeRunTestPackSNTT(t *testing.T) {
 }**/
 
 func TestNTT(t *testing.T) {
+	t.Parallel()
 	var seed [SEEDBYTES]byte
 	for i := 0; i < 100; i++ {
 		rand.Read(seed[:])
@@ -283,6 +293,7 @@ func TestNTT(t *testing.T) {
 }
 
 func TestNTT0(t *testing.T) {
+	t.Parallel()
 	var seed [SEEDBYTES]byte
 	for i := 0; i < 100; i++ {
 		rand.Read(seed[:])
@@ -304,6 +315,7 @@ func TestNTT0(t *testing.T) {
 }
 
 func TestNTTAdd(t *testing.T) {
+	t.Parallel()
 	var seed [SEEDBYTES]byte
 	rand.Read(seed[:])
 	p := polyUniform(seed, uint16(0))
@@ -325,6 +337,7 @@ func TestNTTAdd(t *testing.T) {
 }
 
 func TestNTTAdd0(t *testing.T) {
+	t.Parallel()
 	var seed [SEEDBYTES]byte
 	rand.Read(seed[:])
 	p := polyUniform(seed, uint16(0))
