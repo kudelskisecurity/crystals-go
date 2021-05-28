@@ -1,6 +1,6 @@
 package dilithium
 
-//PackT1 returns the byte representation of v
+//PackT1 returns the byte representation of v.
 func packT1(v Vec, K int) []byte {
 	r := make([]byte, K*polySizeT1)
 
@@ -16,7 +16,7 @@ func packT1(v Vec, K int) []byte {
 	return r
 }
 
-//UnpackT1 reverses the packing operation
+//UnpackT1 reverses the packing operation.
 func unpackT1(r []byte, K int) Vec {
 	v := make(Vec, K)
 	for j := 0; j < K; j++ {
@@ -30,7 +30,7 @@ func unpackT1(r []byte, K int) Vec {
 	return v
 }
 
-//PackT0 packs t0
+//PackT0 packs t0.
 func packT0(v Vec, K int) []byte {
 	r := make([]byte, K*polySizeT0)
 	t := make([]uint32, 8)
@@ -70,7 +70,7 @@ func packT0(v Vec, K int) []byte {
 	return r
 }
 
-//unpackT0 reverses the packing operation
+//unpackT0 reverses the packing operation.
 func unpackT0(a []byte, K int) Vec {
 	v := make(Vec, K)
 	for j := 0; j < K; j++ {
@@ -97,7 +97,7 @@ func unpackT0(a []byte, K int) Vec {
 	return v
 }
 
-//PackW1 packs a w1 poly
+//PackW1 packs a w1 poly.
 func packW1(v Vec, L, POLYSIZEW1 int, GAMMA2 int32) []byte {
 	r := make([]byte, L*POLYSIZEW1)
 	if GAMMA2 == (q-1)/88 {
@@ -118,7 +118,7 @@ func packW1(v Vec, L, POLYSIZEW1 int, GAMMA2 int32) []byte {
 	return r
 }
 
-//PackS packs a S Vec L poly
+//PackS packs a S Vec L poly.
 func packS(v Vec, L, POLYSIZES int, ETA int32) []byte {
 	r := make([]byte, L*POLYSIZES)
 	if ETA == 4 {
@@ -182,7 +182,7 @@ func unpackS(r []byte, L, POLYSIZES int, ETA int32) Vec {
 	return v
 }
 
-//PackZ
+//PackZ.
 func packZ(v Vec, L, POLYSIZEZ int, GAMMA1 int32) []byte {
 	r := make([]byte, L*POLYSIZEZ)
 	if GAMMA1 == (1 << 17) {
@@ -223,7 +223,7 @@ func packZ(v Vec, L, POLYSIZEZ int, GAMMA1 int32) []byte {
 	return r
 }
 
-//UnpackZ reverses the packing operation
+//UnpackZ reverses the packing operation.
 func unpackZ(buf []byte, L, POLYSIZEZ int, GAMMA1 int32) Vec {
 	v := make(Vec, L)
 	if GAMMA1 == (1 << 17) {
@@ -253,7 +253,6 @@ func unpackZ(buf []byte, L, POLYSIZEZ int, GAMMA1 int32) Vec {
 	return v
 }
 
-//PackH
 func packH(v Vec, K int, OMEGA int) []byte {
 	buf := make([]byte, OMEGA+K)
 	off := 0

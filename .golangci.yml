@@ -8,10 +8,8 @@ linters:
   #  - deadcode
   #  - errcheck
   #  - gocritic
-  #  - godot
   #  - gosec
   #  - ifshort
-  #  - misspell
   #  - paralleltest
   #  - predeclared
   #  - revive
@@ -35,6 +33,7 @@ linters:
     - gochecknoinits
     - goconst
     - gocyclo
+    - godot
     - godox
     - goerr113
     - gofmt
@@ -47,6 +46,7 @@ linters:
     - importas
     - ineffassign
     - makezero
+    - misspell
     - nakedret
     - nestif
     - nilerr

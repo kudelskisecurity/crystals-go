@@ -21,7 +21,7 @@ var zetas = [128]int16{
 
 var f = int16(1441)
 
-//NTT performs in place forward NTT
+//NTT performs in place forward NTT.
 func (p *Poly) ntt() {
 	var len, start, j, k uint
 	var zeta, t int16
@@ -70,7 +70,7 @@ func (v Vec) ntt(K int) {
 	}
 }
 
-//Computes the integer in {-(q-1)/2,...,(q-1)/2} congruent to a modulo q
+//barretReduce computes the integer in {-(q-1)/2,...,(q-1)/2} congruent to a modulo q.
 func barretReduce(a int16) int16 {
 	v := int16(((uint32(1) << 26) + uint32(q/2)) / uint32(q))
 
@@ -80,7 +80,7 @@ func barretReduce(a int16) int16 {
 	return a - t
 }
 
-//Computes the integer in {-q+1,...,q-1} congruent to a * R^-1 modulo q
+//montgomeryReduce computes the integer in {-q+1,...,q-1} congruent to a * R^-1 modulo q.
 func montgomeryReduce(a int32) int16 {
 	u := int16(a * int32(qInv))
 	t := int32(u) * int32(q)
@@ -96,12 +96,12 @@ func (p *Poly) fromMont() {
 	}
 }
 
-//Multiplication folowed by Montgomery reduction
+//Multiplication followed by Montgomery reduction.
 func fqmul(a, b int16) int16 {
 	return montgomeryReduce(int32(a) * int32(b))
 }
 
-//Multiplication of elements in Rq in NTT domain
+//Multiplication of elements in Rq in NTT domain.
 func basemul(a, b []int16, zeta int16) []int16 {
 	r := make([]int16, 2)
 	r[0] = fqmul(a[1], b[1])

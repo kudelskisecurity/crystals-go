@@ -37,7 +37,7 @@ var zetas = [n]int32{
 
 var f = int32(41978) //int32(((uint64(MONT) * MONT % Q) * (Q - 1) % Q) * ((Q - 1) >> 8) % Q)
 
-//NTT performs in place forward NTT
+//NTT performs in place forward NTT.
 func (p *Poly) ntt() {
 	var len, start, j, k uint
 	var zeta, t int32
@@ -80,14 +80,14 @@ func (p *Poly) invntt() {
 	}
 }
 
-//VecLNTT performs in place NTT
+//ntt performs in place NTT.
 func (v Vec) ntt(L int) {
 	for i := 0; i < L; i++ {
 		v[i].ntt()
 	}
 }
 
-//VecLInvNTT perfroms in place backward NTT
+//invntt performs in place backward NTT.
 func (v Vec) invntt(L int) {
 	for i := 0; i < L; i++ {
 		v[i].invntt()
@@ -107,7 +107,7 @@ func bsmul(a0, a1, b0, b1, zeta int32) (int32, int32) {
 	return r0, r1
 }
 
-//montgomeryReduce is used to reduce a coefficient to [0, Q]
+//montgomeryReduce is used to reduce a coefficient to [0, Q].
 func montgomeryReduce(a int64) int32 {
 	t := int32(a * qInv)
 	t = int32((a - int64(t)*q) >> 32)
@@ -127,7 +127,7 @@ func (p *Poly) barretReduce() {
 	}
 }
 
-//Computes the integer in {-(q-1)/2,...,(q-1)/2} congruent to a modulo q
+//barretReduce computes the integer in {-(q-1)/2,...,(q-1)/2} congruent to a modulo q.
 func barretReduce(a int32) int32 {
 	v := int32(((uint32(1) << 26) + uint32(q/2)) / uint32(q))
 

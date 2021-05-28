@@ -4,7 +4,7 @@ import (
 	"golang.org/x/crypto/sha3"
 )
 
-//Reduce32 maps a to the [-Q, Q] domain
+//Reduce32 maps a to the [-Q, Q] domain.
 func reduce32(a int32) int32 {
 	t := (a + (1 << 22)) >> 23
 	t = a - t*q
@@ -16,21 +16,21 @@ func addQ(a int32) int32 {
 	return a
 }
 
-//Freeze maps a to the [0, Q] domain
+//Freeze maps a to the [0, Q] domain.
 func freeze(a int32) int32 {
 	a = reduce32(a)
 	a = addQ(a)
 	return a
 }
 
-//Power2Round returns a1 and a0+Q such that a = a1*2^D+a0
+//Power2Round returns a1 and a0+Q such that a = a1*2^D+a0.
 func power2Round(a int32) (int32, int32) {
 	a1 := (a + (1 << (d - 1)) - 1) >> d
 	a0 := a - (a1 << d)
 	return a1, a0
 }
 
-//Decompose returns a1 and a0+Q such that a = a1*alpha + a0
+//Decompose returns a1 and a0+Q such that a = a1*alpha + a0.
 func decompose(a int32, GAMMA2 int32) (int32, int32) {
 	a1 := (a + 127) >> 7
 
@@ -47,7 +47,7 @@ func decompose(a int32, GAMMA2 int32) (int32, int32) {
 	return a1, a0
 }
 
-//MakeHint returns 1 iff a0 overflows a1
+//MakeHint returns 1 iff a0 overflows a1.
 func makeHint(a1, a0 int32, GAMMA2 int32) int32 {
 	if a0 > GAMMA2 || a0 < -GAMMA2 || (a0 == -GAMMA2 && a1 != 0) {
 		return 1
@@ -55,7 +55,7 @@ func makeHint(a1, a0 int32, GAMMA2 int32) int32 {
 	return 0
 }
 
-//UseHint computes the real HighBits of a
+//UseHint computes the real HighBits of a.
 func useHint(a int32, hint int32, GAMMA2 int32) int32 {
 	a1, a0 := decompose(a, GAMMA2)
 	if hint == 0 {
@@ -79,10 +79,10 @@ func useHint(a int32, hint int32, GAMMA2 int32) int32 {
 	return a1 - 1
 }
 
-//Mat is used to hold A
+//Mat is used to hold A.
 type Mat []Vec
 
-//ExpandSeed uses rho to create a KxL matrix of uniform polynomials (A)
+//ExpandSeed uses rho to create a KxL matrix of uniform polynomials (A).
 func expandSeed(rho [SEEDBYTES]byte, K, L int) Mat {
 	A := make(Mat, K)
 	for i := 0; i < K; i++ {

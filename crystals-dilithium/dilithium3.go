@@ -184,7 +184,7 @@ rej:
 	return d.PackSig(z, h, hc[:])
 }
 
-//Verify uses the public key to verify a dilithium signature on the msg
+//Verify uses the public key to verify a dilithium signature on the msg.
 func (d *Dilithium) Verify(packedPK, msg, sig []byte) bool {
 	if len(sig) != d.SIZESIG() || len(packedPK) != d.SIZEPK() {
 		return false

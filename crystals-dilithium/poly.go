@@ -4,24 +4,24 @@ import (
 	"golang.org/x/crypto/sha3"
 )
 
-// Poly represents a polynomial of deg n with coefs in [0, Q)
+// Poly represents a polynomial of deg n with coefs in [0, Q).
 type Poly [n]int32
 
-//Freeze calls Freeze on each coef
+//Freeze calls Freeze on each coef.
 func (a *Poly) freeze() {
 	for i := 0; i < n; i++ {
 		a[i] = freeze(a[i])
 	}
 }
 
-//Reduce calls Reduce32 on each coef
+//Reduce calls Reduce32 on each coef.
 func (a *Poly) reduce() {
 	for i := 0; i < n; i++ {
 		a[i] = reduce32(a[i])
 	}
 }
 
-//Add two Poly without normalization
+//Add two Poly without normalization.
 func add(a, b Poly) Poly {
 	var c Poly
 	for i := 0; i < n; i++ {
@@ -36,7 +36,7 @@ func (a *Poly) addQ() {
 	}
 }
 
-//Sub b from a without normalization
+//Sub b from a without normalization.
 func sub(a, b Poly) Poly {
 	var c Poly
 	for i := 0; i < n; i++ {
@@ -45,7 +45,7 @@ func sub(a, b Poly) Poly {
 	return c
 }
 
-//Shift all coefs by d (=== mult by 2^d)
+//Shift all coefs by d (=== mult by 2^d).
 func (a *Poly) shift() {
 	for i := 0; i < n; i++ {
 		a[i] <<= d
@@ -61,8 +61,8 @@ func basemul(a, b Poly) Poly {
 	return c
 }
 
-//MontMul perfroms pointwise mutl (to be used with nTT Poly)
-//poly_pointwise_montgomery in ref implementation
+//MontMul performs pointwise mutl (to be used with nTT Poly).
+//Refers to poly_pointwise_montgomery in ref implementation.
 func montMul(a, b Poly) Poly {
 	var c Poly
 	for i := 0; i < n; i++ {
@@ -71,7 +71,7 @@ func montMul(a, b Poly) Poly {
 	return c
 }
 
-//IsBelow returns true if all coefs are in [Q-b, Q+b]
+//IsBelow returns true if all coefs are in [Q-b, Q+b].
 func (a Poly) isBelow(bound int32) bool {
 	res := true
 	if bound > (q-1)/8 {
@@ -102,7 +102,7 @@ func rej(a []int32, buf []byte) int {
 	return ctr
 }
 
-//PolyUniform samples a Poly with coefs in [0, Q]
+//PolyUniform samples a Poly with coefs in [0, Q].
 func polyUniform(seed [SEEDBYTES]byte, nonce uint16) Poly {
 	var a Poly
 	var outbuf [5 * shake128Rate]byte
@@ -158,7 +158,7 @@ func rejEta(a []int32, buf []byte, ETA int32) int {
 	return ctr
 }
 
-//PolyUniformEta samples a Poly with coefs in [Q-eta, Q+eta]
+//PolyUniformEta samples a Poly with coefs in [Q-eta, Q+eta].
 func polyUniformEta(seed [2 * SEEDBYTES]byte, nonce uint16, ETA int32) Poly {
 	var a Poly
 	blocks := 1 //ETA == 2
@@ -181,7 +181,7 @@ func polyUniformEta(seed [2 * SEEDBYTES]byte, nonce uint16, ETA int32) Poly {
 	return a
 }
 
-//PolyUniformGamma1 samples a Poly with coefs in [Q-gamma1, Q+gamma1]
+//PolyUniformGamma1 samples a Poly with coefs in [Q-gamma1, Q+gamma1].
 func polyUniformGamma1(rhoP [2 * SEEDBYTES]byte, nonce uint16, GAMMA1 int32) Poly {
 	var outbuf [shake256Rate * 5]byte //is it the good number of blocks? could be less with a test on gamma but...
 	state := sha3.NewShake256()
@@ -196,7 +196,7 @@ func polyUniformGamma1(rhoP [2 * SEEDBYTES]byte, nonce uint16, GAMMA1 int32) Pol
 	return a[0]
 }
 
-//Equal returns true if b is equal to a (all coefs are)
+//Equal returns true if b is equal to a (all coefs are).
 func (a Poly) equal(b Poly) bool {
 	res := true
 	for i := 0; i < n; i++ {
@@ -207,7 +207,7 @@ func (a Poly) equal(b Poly) bool {
 	return res
 }
 
-//PolyPower2Round calls Power2Round on each coef
+//PolyPower2Round calls Power2Round on each coef.
 func polyPower2Round(p Poly) (Poly, Poly) {
 	var p1, p0 Poly
 	for j := 0; j < n; j++ {
@@ -216,7 +216,7 @@ func polyPower2Round(p Poly) (Poly, Poly) {
 	return p1, p0
 }
 
-//PolyDecompose calls Decompose on each coef
+//PolyDecompose calls Decompose on each coef.
 func polyDecompose(p Poly, GAMMA2 int32) (Poly, Poly) {
 	var p1, p0 Poly
 	for j := 0; j < n; j++ {
@@ -225,7 +225,7 @@ func polyDecompose(p Poly, GAMMA2 int32) (Poly, Poly) {
 	return p1, p0
 }
 
-//PolyUseHint uses the hint to correct the hight bits of u
+//PolyUseHint uses the hint to correct the high bits of u.
 func polyUseHint(u, h Poly, GAMMA2 int32) Poly {
 	var p Poly
 	for j := 0; j < n; j++ {

@@ -50,7 +50,7 @@ func TestSign(t *testing.T) {
 	}
 }
 
-//Used for FA
+//TestManySign is used for FA.
 func TestManySign(t *testing.T) {
 	d := NewDilithium2(false)
 	var seed [32]byte

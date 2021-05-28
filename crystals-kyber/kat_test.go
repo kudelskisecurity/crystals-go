@@ -13,6 +13,7 @@ import (
 )
 
 //helpers (see NIST's PQCgenKAT.c)
+
 type randomBytes struct {
 	key [32]byte
 	v   [16]byte
@@ -29,7 +30,6 @@ func (g *randomBytes) incV() {
 	}
 }
 
-// AES256_CTR_randomBytes_Update(pd, &g.key, &g.v)
 func (g *randomBytes) randombyte_update(pd *[48]byte) {
 	var buf [48]byte
 	b, _ := aes.NewCipher(g.key[:])
@@ -46,13 +46,11 @@ func (g *randomBytes) randombyte_update(pd *[48]byte) {
 	copy(g.v[:], buf[32:])
 }
 
-// randombyte_init(seed, NULL, 256)
 func randombyte_init(seed *[48]byte) (g randomBytes) {
 	g.randombyte_update(seed)
 	return
 }
 
-// randombytes()
 func (g *randomBytes) randombytes(x []byte) {
 	var block [16]byte
 

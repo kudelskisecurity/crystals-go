@@ -4,7 +4,7 @@ import (
 	"golang.org/x/crypto/sha3"
 )
 
-// Poly represents a polynomial of deg n with coefs in [0, Q)
+// Poly represents a polynomial of deg n with coefs in [0, Q).
 type Poly [n]int16
 
 func add(a, b Poly) Poly {

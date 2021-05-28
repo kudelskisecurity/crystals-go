@@ -1,6 +1,6 @@
 package dilithium
 
-//Recommended params and consts
+//Recommended parameters and constants.
 const (
 	n            = 256
 	q            = 8380417  // 2²³ - 2¹³ + 1
