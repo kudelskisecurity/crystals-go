@@ -33,17 +33,17 @@ func BenchmarkECDSAVerify(b *testing.B) {
 	}
 }
 
-func BenchmarkKeyGen2(b *testing.B)        { benchmarkKeyGen(b, NewDilithium2(false)) }
-func BenchmarkSign2(b *testing.B)          { benchmarkSign(b, NewDilithium2(false)) }
-func BenchmarkVerify2(b *testing.B)        { benchmarkVerify(b, NewDilithium2(false)) }
+func BenchmarkKeyGen2(b *testing.B) { benchmarkKeyGen(b, NewDilithium2(false)) }
+func BenchmarkSign2(b *testing.B)   { benchmarkSign(b, NewDilithium2(false)) }
+func BenchmarkVerify2(b *testing.B) { benchmarkVerify(b, NewDilithium2(false)) }
 
-func BenchmarkKeyGen3(b *testing.B)        { benchmarkKeyGen(b, NewDilithium3(false)) }
-func BenchmarkSign3(b *testing.B)          { benchmarkSign(b, NewDilithium3(false)) }
-func BenchmarkVerify3(b *testing.B)        { benchmarkVerify(b, NewDilithium3(false)) }
+func BenchmarkKeyGen3(b *testing.B) { benchmarkKeyGen(b, NewDilithium3(false)) }
+func BenchmarkSign3(b *testing.B)   { benchmarkSign(b, NewDilithium3(false)) }
+func BenchmarkVerify3(b *testing.B) { benchmarkVerify(b, NewDilithium3(false)) }
 
-func BenchmarkKeyGen5(b *testing.B)        { benchmarkKeyGen(b, NewDilithium5(false)) }
-func BenchmarkSign5(b *testing.B)          { benchmarkSign(b, NewDilithium5(false)) }
-func BenchmarkVerify5(b *testing.B)        { benchmarkVerify(b, NewDilithium5(false)) }
+func BenchmarkKeyGen5(b *testing.B) { benchmarkKeyGen(b, NewDilithium5(false)) }
+func BenchmarkSign5(b *testing.B)   { benchmarkSign(b, NewDilithium5(false)) }
+func BenchmarkVerify5(b *testing.B) { benchmarkVerify(b, NewDilithium5(false)) }
 
 func benchmarkKeyGen(b *testing.B, d *Dilithium) {
 	var seed [32]byte

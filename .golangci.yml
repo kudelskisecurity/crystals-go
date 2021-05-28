@@ -9,9 +9,6 @@ linters:
   #  - errcheck
   #  - gocritic
   #  - godot
-  #  - godot
-  #  - gofmt
-  #  - goimports
   #  - gosec
   #  - ifshort
   #  - misspell
@@ -40,6 +37,8 @@ linters:
     - gocyclo
     - godox
     - goerr113
+    - gofmt
+    - goimports
     - gomoddirectives
     - gomodguard
     - goprintffuncname
