@@ -107,7 +107,7 @@ func challenge(hc []byte, T int) Poly {
 		signs |= uint64(outbuf[i]) << (8 * i)
 	}
 	pos := 8
-	b := 0
+	var b int
 	for i := n - T; i < n; i++ {
 		for {
 			if pos >= shake256Rate {

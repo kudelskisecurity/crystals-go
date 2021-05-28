@@ -5,7 +5,6 @@ linters-settings:
 linters:
   disable-all: true
   # pending (either enable and handle, or deliberately drop):
-  #  - deadcode
   #  - errcheck
   #  - gocritic
   #  - gosec
@@ -17,10 +16,9 @@ linters:
   #  - testpackage
   #  - thelper
   #  - unconvert
-  #  - unused
-  #  - wastedassign
   enable:
     - asciicheck
+    - deadcode
     - depguard
     - dogsled
     - dupl
@@ -59,7 +57,9 @@ linters:
     - tparallel
     - typecheck
     - unparam
+    - unused
     - varcheck
+    - wastedassign
     - wrapcheck
 
 issues:

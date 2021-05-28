@@ -59,6 +59,7 @@ func TestFreeze(t *testing.T) {
 
 /** Test NTT **/
 
+// nolint:deadcode,unused // this test fails and it is not known why it is disabled.
 func testNTT(t *testing.T) {
 	var seed [32]byte
 	rand := cRand.Reader

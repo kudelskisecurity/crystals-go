@@ -98,15 +98,6 @@ func fqmul(a, b int32) int32 {
 	return montgomeryReduce(int64(a) * int64(b))
 }
 
-func bsmul(a0, a1, b0, b1, zeta int32) (int32, int32) {
-	r0 := fqmul(a1, b1)
-	r0 = fqmul(r0, zeta)
-	r0 += fqmul(a0, b0)
-	r1 := fqmul(a0, b1)
-	r1 += fqmul(a1, b0)
-	return r0, r1
-}
-
 //montgomeryReduce is used to reduce a coefficient to [0, Q].
 func montgomeryReduce(a int64) int32 {
 	t := int32(a * qInv)
@@ -118,12 +109,6 @@ func (p *Poly) tomont() {
 	//	f := int32((uint64(1) << 32) % uint64(q))
 	for i := 0; i < n; i++ {
 		p[i] = montgomeryReduce(int64(p[i]))
-	}
-}
-
-func (p *Poly) barretReduce() {
-	for i := 0; i < n; i++ {
-		p[i] = barretReduce(p[i])
 	}
 }
 

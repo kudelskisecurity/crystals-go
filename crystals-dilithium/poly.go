@@ -52,15 +52,6 @@ func (a *Poly) shift() {
 	}
 }
 
-func basemul(a, b Poly) Poly {
-	var c Poly
-	for i := 0; i < n; i += 4 {
-		c[i], c[i+1] = bsmul(a[i], a[i+1], b[i], b[i+1], zetas[64+i/4])
-		c[i+2], c[i+3] = bsmul(a[i+2], a[i+3], b[i+2], b[i+3], -zetas[64+i/4])
-	}
-	return c
-}
-
 //MontMul performs pointwise mutl (to be used with nTT Poly).
 //Refers to poly_pointwise_montgomery in ref implementation.
 func montMul(a, b Poly) Poly {
