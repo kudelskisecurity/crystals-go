@@ -8,7 +8,7 @@ linters:
   # highly recommended:
   #  - revive # many exported functions and fields need documentation
   #  - errcheck # error return values are not checked; Misses API rework (error return values)
-  #  - gosec # same as errcheck, plus use of weak random number generator (math/rand instead of crypto/rand)
+  #  - gosec # same as errcheck, plus Potential file inclusion via variable
 
   enable:
     - asciicheck
