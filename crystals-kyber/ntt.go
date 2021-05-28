@@ -23,17 +23,17 @@ var f = int16(1441)
 
 //NTT performs in place forward NTT.
 func (p *Poly) ntt() {
-	var len, start, j, k uint
+	var length, start, j, k uint
 	var zeta, t int16
 
 	k = 1
-	for len = 128; len > 1; len >>= 1 {
-		for start = 0; start < n; start = j + len {
+	for length = 128; length > 1; length >>= 1 {
+		for start = 0; start < n; start = j + length {
 			zeta = zetas[k]
 			k++
-			for j = start; j < start+len; j++ {
-				t = fqmul(zeta, p[j+len])
-				p[j+len] = p[j] - t
+			for j = start; j < start+length; j++ {
+				t = fqmul(zeta, p[j+length])
+				p[j+length] = p[j] - t
 				p[j] = p[j] + t
 			}
 		}
@@ -42,19 +42,19 @@ func (p *Poly) ntt() {
 
 //InvNTT perfors in place backward NTT and multiplication by Montgomery factor 2^32.
 func (p *Poly) invntt() {
-	var len, start, j, k uint
+	var length, start, j, k uint
 	var zeta, t int16
 
 	k = 127
-	for len = 2; len < n; len <<= 1 {
-		for start = 0; start < n; start = j + len {
+	for length = 2; length < n; length <<= 1 {
+		for start = 0; start < n; start = j + length {
 			zeta = zetas[k]
 			k--
-			for j = start; j < start+len; j++ {
+			for j = start; j < start+length; j++ {
 				t = p[j]
-				p[j] = barretReduce(t + p[j+len])
-				p[j+len] = p[j+len] - t
-				p[j+len] = fqmul(zeta, p[j+len])
+				p[j] = barretReduce(t + p[j+length])
+				p[j+length] = p[j+length] - t
+				p[j+length] = fqmul(zeta, p[j+length])
 			}
 		}
 	}

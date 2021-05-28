@@ -4,13 +4,15 @@ linters-settings:
 
 linters:
   disable-all: true
+
+  # highly recommended:
+  #  - revive # many exported functions and fields need documentation
+
   # pending (either enable and handle, or deliberately drop):
   #  - errcheck
   #  - gocritic
   #  - gosec
   #  - ifshort
-  #  - predeclared
-  #  - revive
   #  - stylecheck
   #  - unconvert
   enable:
@@ -48,6 +50,7 @@ linters:
     - nolintlint
     - paralleltest
     - prealloc
+    - predeclared
     - rowserrcheck
     - staticcheck
     - structcheck
