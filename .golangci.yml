@@ -12,7 +12,6 @@ linters:
   #  - errcheck
   #  - gocritic
   #  - gosec
-  #  - ifshort
   #  - unconvert
   enable:
     - asciicheck
