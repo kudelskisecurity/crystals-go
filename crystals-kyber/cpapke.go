@@ -107,9 +107,9 @@ func (k *Kyber) Encrypt(packedPK, msg, r []byte) []byte {
 	v.reduce()
 	v.fromMont()
 
-	c := make([]byte, k.params.SIZEC)
-	copy(c, u.compress(k.params.DU, k.params.COMPPOLYSIZE_DU, K))
-	copy(c[K*k.params.COMPPOLYSIZE_DU:], v.compress(k.params.DV, k.params.COMPPOLYSIZE_DV))
+	c := make([]byte, k.params.sizeC)
+	copy(c, u.compress(k.params.DU, k.params.compPolysizeDU, K))
+	copy(c[K*k.params.compPolysizeDU:], v.compress(k.params.DV, k.params.compPolysizeDV))
 	return c
 }
 
@@ -120,10 +120,10 @@ func (k *Kyber) Decrypt(packedSK, c []byte) []byte {
 	}
 	sk := k.UnpackPKESK(packedSK)
 	K := k.params.K
-	COMPPOLYSIZE_DU := k.params.COMPPOLYSIZE_DU
-	uhat := decompressVec(c[:K*COMPPOLYSIZE_DU], k.params.DU, COMPPOLYSIZE_DU, K)
+	compPolysizeDU := k.params.compPolysizeDU
+	uhat := decompressVec(c[:K*compPolysizeDU], k.params.DU, compPolysizeDU, K)
 	uhat.ntt(K)
-	v := decompressPoly(c[K*COMPPOLYSIZE_DU:], k.params.DV)
+	v := decompressPoly(c[K*compPolysizeDU:], k.params.DV)
 	v.ntt()
 
 	m := vecPointWise(sk.S, uhat, K)

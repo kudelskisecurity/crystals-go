@@ -68,4 +68,3 @@ issues:
 
   exclude:
     - ST1000 # at least one file in a package should have a package comment; Excluded because is a TODO
-    - ST1003 # should not use ALL_CAPS in Go names; Excluded because of constants

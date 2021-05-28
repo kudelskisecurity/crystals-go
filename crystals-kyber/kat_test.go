@@ -30,7 +30,7 @@ func (g *randomBytes) incV() {
 	}
 }
 
-func (g *randomBytes) randombyte_update(pd *[48]byte) {
+func (g *randomBytes) randomByteUpdate(pd *[48]byte) {
 	var buf [48]byte
 	b, _ := aes.NewCipher(g.key[:])
 	for i := 0; i < 3; i++ {
@@ -46,8 +46,8 @@ func (g *randomBytes) randombyte_update(pd *[48]byte) {
 	copy(g.v[:], buf[32:])
 }
 
-func randombyte_init(seed *[48]byte) (g randomBytes) {
-	g.randombyte_update(seed)
+func randomByteInit(seed *[48]byte) (g randomBytes) {
+	g.randomByteUpdate(seed)
 	return
 }
 
@@ -65,7 +65,7 @@ func (g *randomBytes) randombytes(x []byte) {
 		copy(x, block[:])
 		x = x[16:]
 	}
-	g.randombyte_update(nil)
+	g.randomByteUpdate(nil)
 }
 
 func TestKAT(t *testing.T) {
@@ -101,16 +101,16 @@ func testKAT(t *testing.T, k *Kyber) {
 	var katfile io.ReadCloser
 		gotkat := false
 		for _, f := range zipfile.File {
-			GOLDEN_KAT := fmt.Sprintf("PQCkemKAT_%d.rsp", k.params.SIZESK)
-			if strings.HasSuffix(f.Name, GOLDEN_KAT) {
+			goldenKat := fmt.Sprintf("PQCkemKAT_%d.rsp", k.params.sizeSK)
+			if strings.HasSuffix(f.Name, goldenKat) {
 				katfile, _ = f.Open()
 				gotkat = true
 				break
 			}
 		}
 	**/
-	GOLDEN_KAT := fmt.Sprintf("PQCkemKAT_%d.rsp", k.params.SIZESK)
-	katfile, err := os.Open("testdata/" + GOLDEN_KAT)
+	goldenKat := fmt.Sprintf("PQCkemKAT_%d.rsp", k.params.sizeSK)
+	katfile, err := os.Open("testdata/" + goldenKat)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -127,7 +127,7 @@ func testKAT(t *testing.T, k *Kyber) {
 	kseed := make([]byte, 2*SEEDBYTES)
 	eseed := make([]byte, SEEDBYTES)
 
-	g := randombyte_init(&seed)
+	g := randomByteInit(&seed)
 	opk, pk := make([]byte, k.SIZEPK()), make([]byte, k.SIZEPK())
 	osk, sk := make([]byte, k.SIZESK()), make([]byte, k.SIZESK())
 	var msg []byte
@@ -161,7 +161,7 @@ func testKAT(t *testing.T, k *Kyber) {
 					t.Fatal("expected 48 byte seed")
 				}
 				g.randombytes(seed[:])
-				g2 := randombyte_init(&seed)
+				g2 := randomByteInit(&seed)
 				g2.randombytes(kseed[:32])
 				g2.randombytes(kseed[32:])
 				g2.randombytes(eseed)
@@ -169,7 +169,7 @@ func testKAT(t *testing.T, k *Kyber) {
 				opk, osk = k.KeyGen(kseed)
 			}
 		case "sk":
-			if len(hval) != k.params.SIZESK {
+			if len(hval) != k.params.sizeSK {
 				t.Fatal("sk size mismatch")
 			}
 			if !bytes.Equal(osk, hval) {
@@ -177,7 +177,7 @@ func testKAT(t *testing.T, k *Kyber) {
 			}
 		case "pk":
 			{
-				if len(hval) != k.params.SIZEPK {
+				if len(hval) != k.params.sizePK {
 					t.Fatal("pk size mismatch")
 				}
 				if !bytes.Equal(opk, hval) {

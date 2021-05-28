@@ -46,7 +46,7 @@ type parameters struct {
 	SIZESK     int // = SIZEZ + 32 + SIZEPK + K*POLYSIZE
 	SIZESIG    int
 	RANDOMIZED int
-	// SIZEPKEPK       int //= SIZEPK
+	// SIZEPKEPK       int //= sizePK
 }
 
 func NewDilithium2(randomized ...bool) *Dilithium {

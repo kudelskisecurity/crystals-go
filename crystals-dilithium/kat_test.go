@@ -75,37 +75,37 @@ func TestKAT(t *testing.T) {
 }
 
 func testKAT(t *testing.T, d *Dilithium, name string) {
-	GOLDEN_KAT := fmt.Sprintf("PQCsignKAT_%s.rsp", name)
+	goldenKat := fmt.Sprintf("PQCsignKAT_%s.rsp", name)
 	/**
-	GOLDEN_ZIP := "https://pq-crystals.org/dilithium/data/dilithium-submission-nist-round3.zip"
+	goldenZip := "https://pq-crystals.org/dilithium/data/dilithium-submission-nist-round3.zip"
 	os.Mkdir("testdata", 0755)
-	cached := "testdata/" + path.Base(GOLDEN_ZIP)
+	cached := "testdata/" + path.Base(goldenZip)
 	zipfile, err := zip.OpenReader(cached)
 	if err != nil {
-		t.Logf("Retrieving golden KAT zip from %s", GOLDEN_ZIP)
-		resp, _ := http.Get(GOLDEN_ZIP)
+		t.Logf("Retrieving golden KAT zip from %s", goldenZip)
+		resp, _ := http.Get(goldenZip)
 		defer resp.Body.Close()
 		body, _ := ioutil.ReadAll(resp.Body)
 		ioutil.WriteFile(cached, body, 0644)
 		zipfile, _ = zip.OpenReader(cached)
 	}
 	if d.params.RANDOMIZED == 0 {
-		GOLDEN_KAT = fmt.Sprintf("PQCsignKAT_impldeter%d.rsp", d.SIZESK())
+		goldenKat = fmt.Sprintf("PQCsignKAT_impldeter%d.rsp", d.sizeSK())
 	}
 
 	var katfile io.ReadCloser
 	gotkat := false
 	for _, f := range zipfile.File {
-		if strings.HasSuffix(f.Name, GOLDEN_KAT) {
+		if strings.HasSuffix(f.Name, goldenKat) {
 			katfile, _ = f.Open()
 			gotkat = true
 			break
 		}
 	}
 	if !gotkat {
-		t.Fatalf("no file names %s\n", GOLDEN_KAT)
+		t.Fatalf("no file names %s\n", goldenKat)
 	}**/
-	katfile, err := os.Open("testdata/" + GOLDEN_KAT)
+	katfile, err := os.Open("testdata/" + goldenKat)
 	if err != nil {
 		t.Fatal(err)
 	}

@@ -22,30 +22,30 @@ type PrivateKey struct {
 }
 
 func (k *Kyber) SIZEPK() int {
-	return k.params.SIZEPK
+	return k.params.sizePK
 }
 
 func (k *Kyber) SIZESK() int {
-	return k.params.SIZESK
+	return k.params.sizeSK
 }
 
 func (k *Kyber) SIZEPKESK() int {
-	return k.params.SIZEPKESK
+	return k.params.sizePKESK
 }
 
 func (k *Kyber) SIZEC() int {
-	return k.params.SIZEC
+	return k.params.sizeC
 }
 
 func (k *Kyber) PackPK(pk *PublicKey) []byte {
-	ppk := make([]byte, k.params.SIZEPK)
+	ppk := make([]byte, k.params.sizePK)
 	copy(ppk, pack(pk.T, k.params.K))
 	copy(ppk[k.params.K*polysize:], pk.Rho)
 	return ppk
 }
 
 func (k *Kyber) UnpackPK(packedPK []byte) *PublicKey {
-	if len(packedPK) != k.params.SIZEPK {
+	if len(packedPK) != k.params.sizePK {
 		println("cannot unpack this public key")
 		return nil
 	}
@@ -53,13 +53,13 @@ func (k *Kyber) UnpackPK(packedPK []byte) *PublicKey {
 }
 
 func (k *Kyber) PackPKESK(sk *PKEPrivateKey) []byte {
-	psk := make([]byte, k.params.SIZEPKESK)
+	psk := make([]byte, k.params.sizePKESK)
 	copy(psk, pack(sk.S, k.params.K))
 	return psk
 }
 
 func (k *Kyber) UnpackPKESK(psk []byte) *PKEPrivateKey {
-	if len(psk) != k.params.SIZEPKESK {
+	if len(psk) != k.params.sizePKESK {
 		println("cannot unpack this private key")
 		return nil
 	}
@@ -67,14 +67,14 @@ func (k *Kyber) UnpackPKESK(psk []byte) *PKEPrivateKey {
 }
 
 func (k *Kyber) PackSK(sk *PrivateKey) []byte {
-	psk := make([]byte, k.params.SIZESK)
+	psk := make([]byte, k.params.sizeSK)
 	id := 0
 	K := k.params.K
 	subtle.ConstantTimeCopy(1, psk[id:id+K*polysize], sk.SkP)
 	id += K * polysize
 	hpk := sk.Pk
 	copy(psk[id:], hpk)
-	id += k.params.SIZEPK
+	id += k.params.sizePK
 	hState := sha3.New256()
 	hState.Write(hpk)
 	copy(psk[id:id+32], hState.Sum(nil))
@@ -84,11 +84,11 @@ func (k *Kyber) PackSK(sk *PrivateKey) []byte {
 }
 
 func (k *Kyber) UnpackSK(psk []byte) *PrivateKey {
-	if len(psk) != k.params.SIZESK {
+	if len(psk) != k.params.sizeSK {
 		println("cannot unpack this private key")
 		return nil
 	}
-	SIZEPKESK := k.params.SIZEPKESK
-	SIZEPK := k.params.SIZEPK
+	SIZEPKESK := k.params.sizePKESK
+	SIZEPK := k.params.sizePK
 	return &PrivateKey{Z: psk[SIZEPKESK+SIZEPK : SIZEPKESK+SIZEPK+32], SkP: psk[:SIZEPKESK], Pk: psk[SIZEPKESK : SIZEPKESK+SIZEPK]}
 }
