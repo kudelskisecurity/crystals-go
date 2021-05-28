@@ -13,7 +13,6 @@ linters:
   #  - gocritic
   #  - gosec
   #  - ifshort
-  #  - stylecheck
   #  - unconvert
   enable:
     - asciicheck
@@ -54,6 +53,7 @@ linters:
     - rowserrcheck
     - staticcheck
     - structcheck
+    - stylecheck
     - tagliatelle
     - tparallel
     - typecheck
@@ -67,3 +67,7 @@ issues:
   exclude-use-default: false # disable filtering of defaults for better zero-issue policy
   max-per-linter: 0 # disable limit; report all issues of a linter
   max-same-issues: 0 # disable limit; report all issues of the same issue
+
+  exclude:
+    - ST1000 # at least one file in a package should have a package comment; Excluded because is a TODO
+    - ST1003 # should not use ALL_CAPS in Go names; Excluded because of constants

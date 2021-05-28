@@ -8,16 +8,16 @@ import (
 type Poly [n]int32
 
 //Freeze calls Freeze on each coef.
-func (a *Poly) freeze() {
+func (p *Poly) freeze() {
 	for i := 0; i < n; i++ {
-		a[i] = freeze(a[i])
+		p[i] = freeze(p[i])
 	}
 }
 
 //Reduce calls Reduce32 on each coef.
-func (a *Poly) reduce() {
+func (p *Poly) reduce() {
 	for i := 0; i < n; i++ {
-		a[i] = reduce32(a[i])
+		p[i] = reduce32(p[i])
 	}
 }
 
@@ -30,9 +30,9 @@ func add(a, b Poly) Poly {
 	return c
 }
 
-func (a *Poly) addQ() {
+func (p *Poly) addQ() {
 	for i := 0; i < n; i++ {
-		a[i] = addQ(a[i])
+		p[i] = addQ(p[i])
 	}
 }
 
@@ -46,9 +46,9 @@ func sub(a, b Poly) Poly {
 }
 
 //Shift all coefs by d (=== mult by 2^d).
-func (a *Poly) shift() {
+func (p *Poly) shift() {
 	for i := 0; i < n; i++ {
-		a[i] <<= d
+		p[i] <<= d
 	}
 }
 
@@ -63,14 +63,14 @@ func montMul(a, b Poly) Poly {
 }
 
 //IsBelow returns true if all coefs are in [Q-b, Q+b].
-func (a Poly) isBelow(bound int32) bool {
+func (p Poly) isBelow(bound int32) bool {
 	res := true
 	if bound > (q-1)/8 {
 		return false
 	}
 	for i := 0; i < n; i++ {
-		t := a[i] >> 31
-		t = a[i] - (t & 2 * a[i])
+		t := p[i] >> 31
+		t = p[i] - (t & 2 * p[i])
 		res = res && (t < bound)
 	}
 	return res
@@ -188,10 +188,10 @@ func polyUniformGamma1(rhoP [2 * SEEDBYTES]byte, nonce uint16, GAMMA1 int32) Pol
 }
 
 //Equal returns true if b is equal to a (all coefs are).
-func (a Poly) equal(b Poly) bool {
+func (p Poly) equal(b Poly) bool {
 	res := true
 	for i := 0; i < n; i++ {
-		if a[i] != b[i] {
+		if p[i] != b[i] {
 			res = false
 		}
 	}
