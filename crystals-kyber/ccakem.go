@@ -17,18 +17,18 @@ func (k *Kyber) KeyGen(seed []byte) ([]byte, []byte) {
 	return pk, k.PackSK(&PrivateKey{SkP: skP, Pk: pk, Z: seed[SEEDBYTES:]})
 }
 
-func (k *Kyber) Encaps(seed []byte, packedPK []byte) ([]byte, []byte) {
+func (k *Kyber) Encaps(packedPK, coins []byte) ([]byte, []byte) {
 	if len(packedPK) != k.SIZEPK() {
 		println("Public key does not have the correct size.")
 		return nil, nil
 	}
-	if seed == nil || len(seed) != SEEDBYTES {
-		seed = make([]byte, SEEDBYTES)
-		rand.Read(seed[:])
+	if coins == nil || len(coins) != SEEDBYTES {
+		coins = make([]byte, SEEDBYTES)
+		rand.Read(coins[:])
 	}
 	var m, ss [32]byte
 	hState := sha3.New256()
-	hState.Write(seed[:])
+	hState.Write(coins[:])
 	copy(m[:], hState.Sum(nil))
 
 	hpk := make([]byte, 32)
@@ -43,7 +43,7 @@ func (k *Kyber) Encaps(seed []byte, packedPK []byte) ([]byte, []byte) {
 	copy(kr[:], gState.Sum(nil))
 	copy(kc[:32], kr[:32])
 
-	c := k.Encrypt(m[:], kr[32:], packedPK)
+	c := k.Encrypt(packedPK, m[:], kr[32:])
 
 	hState.Reset()
 	hState.Write(c[:])
@@ -55,14 +55,14 @@ func (k *Kyber) Encaps(seed []byte, packedPK []byte) ([]byte, []byte) {
 	return c[:], ss[:]
 }
 
-func (k *Kyber) Decaps(c []byte, packedSK []byte) []byte {
+func (k *Kyber) Decaps(packedSK, c []byte) []byte {
 	if len(c) != k.SIZEC() || len(packedSK) != k.SIZESK() {
 		println("Cannot decapsulate, inputs do not have the correct size.")
 		return nil
 	}
 
 	sk := k.UnpackSK(packedSK)
-	m := k.Decrypt(c, sk.SkP)
+	m := k.Decrypt(sk.SkP, c)
 
 	hpk := make([]byte, 32)
 	hState := sha3.New256()
@@ -76,7 +76,7 @@ func (k *Kyber) Decaps(c []byte, packedSK []byte) []byte {
 	copy(kr[:], gState.Sum(nil))
 	copy(kc[:], kr[:32])
 
-	c2 := k.Encrypt(m, kr[32:], sk.Pk)
+	c2 := k.Encrypt(sk.Pk, m, kr[32:])
 	hState.Reset()
 	hState.Write(c2[:])
 	copy(kc[32:], hState.Sum(nil))

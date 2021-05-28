@@ -49,7 +49,7 @@ func (k *Kyber) PKEKeyGen(seed []byte) ([]byte, []byte) {
 	return k.PackPK(&PublicKey{T: t, Rho: rho[:]}), k.PackPKESK(&PKEPrivateKey{S: shat})
 }
 
-func (k *Kyber) Encrypt(msg []byte, r []byte, packedPK []byte) []byte {
+func (k *Kyber) Encrypt(packedPK, msg, r []byte) []byte {
 
 	if len(msg) < n/8 {
 		println("Message is too short to be encrypted.")
@@ -113,7 +113,7 @@ func (k *Kyber) Encrypt(msg []byte, r []byte, packedPK []byte) []byte {
 	return c[:]
 }
 
-func (k *Kyber) Decrypt(c []byte, packedSK []byte) []byte {
+func (k *Kyber) Decrypt(packedSK, c []byte) []byte {
 	if len(c) != k.SIZEC() || len(packedSK) != k.SIZEPKESK() {
 		println("Cannot decrypt, inputs do not have correct size.")
 		return nil

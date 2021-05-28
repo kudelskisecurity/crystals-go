@@ -31,8 +31,8 @@ func testKeyGenKEMRep(t *testing.T, k *Kyber) {
 	}
 	var r [32]byte
 	rand.Read(r[:])
-	c, ss := k.Encaps(r[:], pk)
-	c2, ss2 := k.Encaps(r[:], pk)
+	c, ss := k.Encaps(pk, r[:])
+	c2, ss2 := k.Encaps(pk, r[:])
 	if !bytes.Equal(c2, c) || !bytes.Equal(ss, ss2) {
 		t.Fatalf("Seed in keygen failed")
 	}
@@ -42,8 +42,8 @@ func testDecaps(t *testing.T, k *Kyber) {
 	pk, sk := k.KeyGen(nil)
 	var r [32]byte
 	rand.Read(r[:])
-	c, ss := k.Encaps(r[:], pk)
-	ss2 := k.Decaps(c, sk)
+	c, ss := k.Encaps(pk, r[:])
+	ss2 := k.Decaps(sk, c)
 	if !bytes.Equal(ss[:], ss2[:]) {
 		fmt.Printf("k %+v vs k2 %+v\n", ss, ss2)
 		t.Fatal("Failed to decaps")
