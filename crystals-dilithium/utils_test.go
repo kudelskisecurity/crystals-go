@@ -192,7 +192,7 @@ func TestPow2Round(t *testing.T) {
 	if (-(1 << (d - 1)) >= r0) || (r0 >= 1<<(d-1)) {
 		t.Fatalf("Power2Round failed r0 not in the bounds")
 	}
-	if int32(r1)*(1<<d)+r0 != int32(r) {
+	if r1*(1<<d)+r0 != r {
 		t.Fatal("Power2Round failed")
 	}
 }
@@ -217,13 +217,13 @@ func TestMakeHints(t *testing.T) {
 	t.Parallel()
 	d := NewDilithium3(false)
 	r := int32(rand.Intn(q))
-	g2 := int32(d.params.GAMMA2)
+	g2 := d.params.GAMMA2
 	r1, r0 := decompose(r, g2)
 	//useHint( r - f, makeHint( r0 - f, r1 ) ) = r1.
 	if makeHint(r1, r0, g2) != 0 {
 		t.Fatal("Make hint failed")
 	}
-	r0 = int32(1 + d.params.GAMMA2)
+	r0 = 1 + d.params.GAMMA2
 	if makeHint(r1, r0, g2) != 1 {
 		t.Fatal("Make hint failed")
 	}
@@ -243,13 +243,13 @@ func TestUseHints(t *testing.T) {
 	if useHint(r, makeHint(r1, r0+n, g2), g2) != r1 {
 		t.Fatal("Use hint failed")
 	}
-	z := int32(d.params.GAMMA2 + 1)
+	z := d.params.GAMMA2 + 1
 	if useHint(r, makeHint(r1, z, g2), g2) == r1 {
 		t.Fatal("Use hint failed")
 	}
 }
 
-//test wether we can pack (NTT(s)) the same way as s: answer is no...
+//test whether we can pack (NTT(s)) the same way as s: answer is no...
 /**
 func OneTimeRunTestPackSNTT(t *testing.T) {
 	var seed [64]byte

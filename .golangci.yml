@@ -12,7 +12,6 @@ linters:
   #  - errcheck
   #  - gocritic
   #  - gosec
-  #  - unconvert
   enable:
     - asciicheck
     - deadcode
@@ -56,6 +55,7 @@ linters:
     - tagliatelle
     - tparallel
     - typecheck
+    - unconvert
     - unparam
     - unused
     - varcheck

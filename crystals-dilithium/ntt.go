@@ -116,7 +116,7 @@ func (p *Poly) tomont() {
 func barretReduce(a int32) int32 {
 	v := int32(((uint32(1) << 26) + uint32(q/2)) / uint32(q))
 
-	t := int32(v) * int32(a) >> 26
+	t := v * a >> 26
 	//t := int16((int32(v)*int32(a) + (1 << 25)) >> 26)
 	t *= int32(q)
 	return a - t
