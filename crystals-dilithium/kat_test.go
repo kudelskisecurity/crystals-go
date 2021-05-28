@@ -142,11 +142,11 @@ func testKAT(t *testing.T, d *Dilithium, name string) {
 				fmt.Printf("smlen: %d vs %d\n", smlen, len(hval))
 				t.Fatal("smlen != len(sm)")
 			}
-			sig := d.Sign(msg, sk)
+			sig := d.Sign(sk, msg)
 			if !bytes.Equal(append(sig, msg...), hval) {
 				t.Fatal("signature mismatch")
 			}
-			if !d.Verify(msg, sig, pk) {
+			if !d.Verify(pk, msg, sig) {
 				t.Fatal("failed to validate")
 			}
 			//println("one iter ok")
@@ -163,7 +163,7 @@ func TestInterOp(t *testing.T) {
 
 	d := NewDilithium2(false)
 
-	if !d.Verify(msg, sig, pk) {
+	if !d.Verify(pk, msg, sig) {
 		t.Fatal("could not verify signature generated with reference files")
 	}
 }

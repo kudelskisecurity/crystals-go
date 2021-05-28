@@ -60,7 +60,7 @@ func (d *Dilithium) KeyGen(seed []byte) ([]byte, []byte) {
 }
 
 //Sign uses to PrivateKey to compute the signature om msg.
-func (d *Dilithium) Sign(msg []byte, packedSK []byte) []byte {
+func (d *Dilithium) Sign(packedSK, msg []byte) []byte {
 	if len(packedSK) != d.SIZESK() {
 		println("Cannot sign with this key.")
 		return nil
@@ -185,7 +185,7 @@ rej:
 }
 
 //Verify uses the public key to verify a dilithium signature on the msg
-func (d *Dilithium) Verify(msg []byte, sig []byte, packedPK []byte) bool {
+func (d *Dilithium) Verify(packedPK, msg, sig []byte) bool {
 	if len(sig) != d.SIZESIG() || len(packedPK) != d.SIZEPK() {
 		return false
 	}

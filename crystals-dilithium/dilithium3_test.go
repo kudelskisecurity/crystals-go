@@ -42,7 +42,7 @@ func TestSign(t *testing.T) {
 	io.ReadFull(rand, seed[:])
 	_, sk := d.KeyGen(seed[:])
 	msg := []byte("Message to sign")
-	sig := d.Sign(msg, sk)
+	sig := d.Sign(sk, msg)
 	z, h, c := d.UnpackSig(sig)
 	//var cNull Poly
 	if z == nil || h == nil || c == nil { //}|| c.equal(cNull) {
@@ -59,7 +59,7 @@ func TestManySign(t *testing.T) {
 		io.ReadFull(rand, seed[:])
 		_, sk := d.KeyGen(seed[:])
 		msg := []byte("Message to sign")
-		sig := d.Sign(msg, sk)
+		sig := d.Sign(sk, msg)
 		z, h, c := d.UnpackSig(sig)
 		//var cNull Poly
 		if z == nil || h == nil || c == nil { //}|| c.equal(cNull) {
@@ -128,8 +128,8 @@ func TestVerify(t *testing.T) {
 	io.ReadFull(rand, seed[:])
 	pk, sk := d.KeyGen(seed[:])
 	msg := []byte("Message to sign")
-	sig := d.Sign(msg, sk)
-	if !d.Verify(msg, sig, pk) {
+	sig := d.Sign(sk, msg)
+	if !d.Verify(pk, msg, sig) {
 		t.Fatal("Verify failed")
 	}
 
@@ -142,9 +142,9 @@ func TestVerifAnotherMSG(t *testing.T) {
 	io.ReadFull(rand, seed[:])
 	pk, sk := d.KeyGen(seed[:])
 	msg := []byte("Message to sign")
-	sig := d.Sign(msg, sk)
+	sig := d.Sign(sk, msg)
 	msg2 := []byte("Another message")
-	if d.Verify(msg2, sig, pk) {
+	if d.Verify(pk, msg2, sig) {
 		t.Fatal("Signature verified on another msg")
 
 	}
