@@ -46,13 +46,13 @@ func TestSign(t *testing.T) {
 	msg := []byte("Message to sign")
 	sig := d.Sign(sk, msg)
 	z, h, c := d.UnpackSig(sig)
-	//var cNull Poly
-	if z == nil || h == nil || c == nil { //}|| c.equal(cNull) {
+	// var cNull Poly
+	if z == nil || h == nil || c == nil { // }|| c.equal(cNull) {
 		t.Fatal("sig failed")
 	}
 }
 
-//TestManySign is used for FA.
+// TestManySign is used for FA.
 func TestManySign(t *testing.T) {
 	t.Parallel()
 	d := NewDilithium2(false)
@@ -64,8 +64,8 @@ func TestManySign(t *testing.T) {
 		msg := []byte("Message to sign")
 		sig := d.Sign(sk, msg)
 		z, h, c := d.UnpackSig(sig)
-		//var cNull Poly
-		if z == nil || h == nil || c == nil { //}|| c.equal(cNull) {
+		// var cNull Poly
+		if z == nil || h == nil || c == nil { // }|| c.equal(cNull) {
 			t.Fatal("sig failed")
 		}
 	}
@@ -161,10 +161,10 @@ func TestPack(t *testing.T) {
 	pk, sk := d.KeyGen(nil)
 	pk2 := d.PackPK(d.UnpackPK(pk))
 	sk2 := d.PackSK(d.UnpackSK(sk))
-	if !bytes.Equal(pk[:], pk2[:]) {
+	if !bytes.Equal(pk, pk2) {
 		t.Fatal("Pack failed")
 	}
-	if !bytes.Equal(sk[:], sk2[:]) {
+	if !bytes.Equal(sk, sk2) {
 		t.Fatal("SK Pack failed")
 	}
 }

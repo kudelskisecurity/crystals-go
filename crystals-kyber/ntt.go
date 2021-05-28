@@ -21,7 +21,7 @@ var zetas = [128]int16{
 
 var f = int16(1441)
 
-//NTT performs in place forward NTT.
+// NTT performs in place forward NTT.
 func (p *Poly) ntt() {
 	var length, start, j, k uint
 	var zeta, t int16
@@ -34,13 +34,13 @@ func (p *Poly) ntt() {
 			for j = start; j < start+length; j++ {
 				t = fqmul(zeta, p[j+length])
 				p[j+length] = p[j] - t
-				p[j] = p[j] + t
+				p[j] += t
 			}
 		}
 	}
 }
 
-//InvNTT perfors in place backward NTT and multiplication by Montgomery factor 2^32.
+// InvNTT perfors in place backward NTT and multiplication by Montgomery factor 2^32.
 func (p *Poly) invntt() {
 	var length, start, j, k uint
 	var zeta, t int16
@@ -53,7 +53,7 @@ func (p *Poly) invntt() {
 			for j = start; j < start+length; j++ {
 				t = p[j]
 				p[j] = barretReduce(t + p[j+length])
-				p[j+length] = p[j+length] - t
+				p[j+length] -= t
 				p[j+length] = fqmul(zeta, p[j+length])
 			}
 		}
@@ -64,23 +64,23 @@ func (p *Poly) invntt() {
 	}
 }
 
-func (v Vec) ntt(K int) {
-	for i := 0; i < K; i++ {
+func (v Vec) ntt(k int) {
+	for i := 0; i < k; i++ {
 		v[i].ntt()
 	}
 }
 
-//barretReduce computes the integer in {-(q-1)/2,...,(q-1)/2} congruent to a modulo q.
+// barretReduce computes the integer in {-(q-1)/2,...,(q-1)/2} congruent to a modulo q.
 func barretReduce(a int16) int16 {
 	v := int16(((uint32(1) << 26) + uint32(q/2)) / uint32(q))
 
 	t := int16(int32(v) * int32(a) >> 26)
-	//t := int16((int32(v)*int32(a) + (1 << 25)) >> 26)
+	// t := int16((int32(v)*int32(a) + (1 << 25)) >> 26)
 	t *= int16(q)
 	return a - t
 }
 
-//montgomeryReduce computes the integer in {-q+1,...,q-1} congruent to a * R^-1 modulo q.
+// montgomeryReduce computes the integer in {-q+1,...,q-1} congruent to a * R^-1 modulo q.
 func montgomeryReduce(a int32) int16 {
 	u := int16(a * int32(qInv))
 	t := int32(u) * int32(q)
@@ -96,12 +96,12 @@ func (p *Poly) fromMont() {
 	}
 }
 
-//Multiplication followed by Montgomery reduction.
+// Multiplication followed by Montgomery reduction.
 func fqmul(a, b int16) int16 {
 	return montgomeryReduce(int32(a) * int32(b))
 }
 
-//Multiplication of elements in Rq in NTT domain.
+// Multiplication of elements in Rq in NTT domain.
 func basemul(a, b []int16, zeta int16) []int16 {
 	r := make([]int16, 2)
 	r[0] = fqmul(a[1], b[1])

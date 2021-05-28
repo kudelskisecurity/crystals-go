@@ -12,7 +12,7 @@ import (
 	"testing"
 )
 
-//helpers (see NIST's PQCgenKAT.c)
+// helpers (see NIST's PQCgenKAT.c)
 
 type randomBytes struct {
 	key [32]byte
@@ -59,10 +59,10 @@ func (g *randomBytes) randombytes(x []byte) {
 		g.incV()
 		b.Encrypt(block[:], g.v[:])
 		if len(x) < 16 {
-			copy(x[:], block[:len(x)])
+			copy(x, block[:len(x)])
 			break
 		}
-		copy(x[:], block[:])
+		copy(x, block[:])
 		x = x[16:]
 	}
 	g.randombyte_update(nil)
@@ -119,10 +119,10 @@ func testKAT(t *testing.T, k *Kyber) {
 
 	smlen := 0
 	mlen := 0
-	//count := 0
+	// count := 0
 	var seed [48]byte
 	for i := 0; i < 48; i++ {
-		seed[i] = byte(i) //entropy_input
+		seed[i] = byte(i) // entropy_input
 	}
 	kseed := make([]byte, 2*SEEDBYTES)
 	eseed := make([]byte, SEEDBYTES)
@@ -166,13 +166,13 @@ func testKAT(t *testing.T, k *Kyber) {
 				g2.randombytes(kseed[32:])
 				g2.randombytes(eseed)
 
-				opk, osk = k.KeyGen(kseed[:])
+				opk, osk = k.KeyGen(kseed)
 			}
 		case "sk":
 			if len(hval) != k.params.SIZESK {
 				t.Fatal("sk size mismatch")
 			}
-			if !bytes.Equal(osk[:], hval) {
+			if !bytes.Equal(osk, hval) {
 				t.Fatal("sk mismatch")
 			}
 		case "pk":
@@ -180,7 +180,7 @@ func testKAT(t *testing.T, k *Kyber) {
 				if len(hval) != k.params.SIZEPK {
 					t.Fatal("pk size mismatch")
 				}
-				if !bytes.Equal(opk[:], hval) {
+				if !bytes.Equal(opk, hval) {
 					t.Fatal("pk mismatch")
 				}
 			}

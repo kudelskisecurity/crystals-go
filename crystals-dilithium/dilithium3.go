@@ -59,7 +59,7 @@ func (d *Dilithium) KeyGen(seed []byte) ([]byte, []byte) {
 	return d.PackPK(PublicKey{T1: t1, Rho: rho}), d.PackSK(PrivateKey{Rho: rho, Key: key, Tr: tr, S1: s1, S2: s2, T0: t0})
 }
 
-//Sign uses to PrivateKey to compute the signature om msg.
+// Sign uses to PrivateKey to compute the signature om msg.
 func (d *Dilithium) Sign(packedSK, msg []byte) []byte {
 	if len(packedSK) != d.SIZESK() {
 		println("Cannot sign with this key.")
@@ -87,11 +87,11 @@ func (d *Dilithium) Sign(packedSK, msg []byte) []byte {
 	rand.Read(rhoPRand[:])
 	subtle.ConstantTimeCopy(d.params.RANDOMIZED, rhoP[:], rhoPRand[:])
 
-	s1hat := sk.S1.copy() //what if we store the NTT transform in sk? sk.S1 isn't used
-	//current PackS function is lossy on NTT(s1) because the coefs are too big - so does not work yet
-	//Could remove the need for copy by changing the way we give sk (copy)
-	s2hat := sk.S2.copy() //same question
-	t0hat := sk.T0.copy() //same question
+	s1hat := sk.S1.copy() // what if we store the NTT transform in sk? sk.S1 isn't used
+	// current PackS function is lossy on NTT(s1) because the coefs are too big - so does not work yet
+	// Could remove the need for copy by changing the way we give sk (copy)
+	s2hat := sk.S2.copy() // same question
+	t0hat := sk.T0.copy() // same question
 	s1hat.ntt(L)
 	s2hat.ntt(K)
 	t0hat.ntt(K)
@@ -101,7 +101,7 @@ func (d *Dilithium) Sign(packedSK, msg []byte) []byte {
 	var c Poly
 
 rej:
-	if nonce > 500 { //Failing after 500 trials happens with probability close to 2^(-128).
+	if nonce > 500 { // Failing after 500 trials happens with probability close to 2^(-128).
 		println("Sign ran out of trials.")
 		return nil
 	}
@@ -184,7 +184,7 @@ rej:
 	return d.PackSig(z, h, hc[:])
 }
 
-//Verify uses the public key to verify a dilithium signature on the msg.
+// Verify uses the public key to verify a dilithium signature on the msg.
 func (d *Dilithium) Verify(packedPK, msg, sig []byte) bool {
 	if len(sig) != d.SIZESIG() || len(packedPK) != d.SIZEPK() {
 		return false
@@ -196,7 +196,7 @@ func (d *Dilithium) Verify(packedPK, msg, sig []byte) bool {
 	pk := d.UnpackPK(packedPK)
 	z, h, hc := d.UnpackSig(sig)
 
-	c := challenge(hc[:], d.params.T)
+	c := challenge(hc, d.params.T)
 	Ahat := expandSeed(pk.Rho, K, L)
 	var tr [SEEDBYTES]byte
 	var mu [2 * SEEDBYTES]byte
@@ -216,7 +216,7 @@ func (d *Dilithium) Verify(packedPK, msg, sig []byte) bool {
 	chat := c
 	chat.ntt()
 
-	t1hat := pk.T1.copy() //tmp2
+	t1hat := pk.T1.copy() // tmp2
 
 	w1 := make(Vec, K)
 	for i := 0; i < K; i++ {
@@ -224,12 +224,12 @@ func (d *Dilithium) Verify(packedPK, msg, sig []byte) bool {
 
 		t1hat[i].shift()
 		t1hat[i].ntt()
-		t1hat[i] = montMul(chat, t1hat[i]) //ct1x2^d
+		t1hat[i] = montMul(chat, t1hat[i]) // ct1x2^d
 
 		w1[i] = sub(w1[i], t1hat[i])
 		w1[i].reduce()
 		w1[i].invntt()
-		w1[i].addQ() //Az-ct1x2^d
+		w1[i].addQ() // Az-ct1x2^d
 		w1[i] = polyUseHint(w1[i], h[i], d.params.GAMMA2)
 	}
 	var hc2 [SEEDBYTES]byte

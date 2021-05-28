@@ -7,16 +7,16 @@ import (
 )
 
 type PublicKey struct {
-	T   Vec    //NTT(t)
-	Rho []byte //32
+	T   Vec    // NTT(t)
+	Rho []byte // 32
 }
 
 type PKEPrivateKey struct {
-	S Vec //NTT(s)
+	S Vec // NTT(s)
 }
 
 type PrivateKey struct {
-	Z   []byte //32
+	Z   []byte // 32
 	SkP []byte
 	Pk  []byte
 }
@@ -39,8 +39,8 @@ func (k *Kyber) SIZEC() int {
 
 func (k *Kyber) PackPK(pk *PublicKey) []byte {
 	ppk := make([]byte, k.params.SIZEPK)
-	copy(ppk[:], pack(pk.T, k.params.K))
-	copy(ppk[k.params.K*polysize:], pk.Rho[:])
+	copy(ppk, pack(pk.T, k.params.K))
+	copy(ppk[k.params.K*polysize:], pk.Rho)
 	return ppk
 }
 
@@ -49,12 +49,12 @@ func (k *Kyber) UnpackPK(packedPK []byte) *PublicKey {
 		println("cannot unpack this public key")
 		return nil
 	}
-	return &PublicKey{Rho: packedPK[k.params.K*polysize:], T: unpack(packedPK[:], k.params.K)}
+	return &PublicKey{Rho: packedPK[k.params.K*polysize:], T: unpack(packedPK, k.params.K)}
 }
 
 func (k *Kyber) PackPKESK(sk *PKEPrivateKey) []byte {
 	psk := make([]byte, k.params.SIZEPKESK)
-	copy(psk[:], pack(sk.S, k.params.K))
+	copy(psk, pack(sk.S, k.params.K))
 	return psk
 }
 
@@ -63,23 +63,23 @@ func (k *Kyber) UnpackPKESK(psk []byte) *PKEPrivateKey {
 		println("cannot unpack this private key")
 		return nil
 	}
-	return &PKEPrivateKey{S: unpack(psk[:], k.params.K)}
+	return &PKEPrivateKey{S: unpack(psk, k.params.K)}
 }
 
 func (k *Kyber) PackSK(sk *PrivateKey) []byte {
 	psk := make([]byte, k.params.SIZESK)
 	id := 0
 	K := k.params.K
-	subtle.ConstantTimeCopy(1, psk[id:id+K*polysize], sk.SkP[:])
+	subtle.ConstantTimeCopy(1, psk[id:id+K*polysize], sk.SkP)
 	id += K * polysize
-	hpk := sk.Pk[:]
+	hpk := sk.Pk
 	copy(psk[id:], hpk)
 	id += k.params.SIZEPK
 	hState := sha3.New256()
 	hState.Write(hpk)
 	copy(psk[id:id+32], hState.Sum(nil))
 	id += 32
-	subtle.ConstantTimeCopy(1, psk[id:id+32], sk.Z[:])
+	subtle.ConstantTimeCopy(1, psk[id:id+32], sk.Z)
 	return psk
 }
 

@@ -1,6 +1,6 @@
 package dilithium
 
-//Recommended parameters and constants.
+// Recommended parameters and constants.
 const (
 	n            = 256
 	q            = 8380417  // 2²³ - 2¹³ + 1
@@ -31,7 +31,7 @@ type Dilithium struct {
 }
 
 type parameters struct {
-	T          int //sizec
+	T          int // sizec
 	K          int
 	L          int
 	GAMMA1     int32
@@ -40,17 +40,17 @@ type parameters struct {
 	BETA       int32
 	OMEGA      int
 	POLYSIZES  int
-	POLYSIZEZ  int //= (N * (QBITS - 3)) / 8
-	POLYSIZEW1 int //= ((N * 4) / 8)
-	SIZEPK     int //= K*POLYSIZE + SEEDBYTES
-	SIZESK     int //= SIZEZ + 32 + SIZEPK + K*POLYSIZE
+	POLYSIZEZ  int // = (N * (QBITS - 3)) / 8
+	POLYSIZEW1 int // = ((N * 4) / 8)
+	SIZEPK     int // = K*POLYSIZE + SEEDBYTES
+	SIZESK     int // = SIZEZ + 32 + SIZEPK + K*POLYSIZE
 	SIZESIG    int
 	RANDOMIZED int
-	//SIZEPKEPK       int //= SIZEPK
+	// SIZEPKEPK       int //= SIZEPK
 }
 
 func NewDilithium2(randomized ...bool) *Dilithium {
-	r := 1 //randomized by default
+	r := 1 // randomized by default
 	if len(randomized) == 1 && !randomized[0] {
 		r = 0
 	}
@@ -65,9 +65,9 @@ func NewDilithium2(randomized ...bool) *Dilithium {
 			ETA:        2,
 			BETA:       78,
 			OMEGA:      80,
-			POLYSIZES:  96,  //POLYETA,
-			POLYSIZEZ:  576, //POLYGAMMA1
-			POLYSIZEW1: 192, //POLYGAMMA2
+			POLYSIZES:  96,  // POLYETA,
+			POLYSIZEZ:  576, // POLYGAMMA1
+			POLYSIZEW1: 192, // POLYGAMMA2
 			RANDOMIZED: r,
 			SIZEPK:     32 + 4*polySizeT1,
 			SIZESK:     32 + 32 + 32 + 4*polySizeT0 + (4+4)*96,
@@ -76,7 +76,7 @@ func NewDilithium2(randomized ...bool) *Dilithium {
 }
 
 func NewDilithium3(randomized ...bool) *Dilithium {
-	r := 1 //randomized by default
+	r := 1 // randomized by default
 	if len(randomized) == 1 && !randomized[0] {
 		r = 0
 	}
@@ -92,8 +92,8 @@ func NewDilithium3(randomized ...bool) *Dilithium {
 			BETA:       196,
 			OMEGA:      55,
 			RANDOMIZED: r,
-			POLYSIZES:  128, //POLYETA,
-			POLYSIZEZ:  640, //POLYGAMMA1
+			POLYSIZES:  128, // POLYETA,
+			POLYSIZEZ:  640, // POLYGAMMA1
 			POLYSIZEW1: 128,
 			SIZEPK:     32 + 6*polySizeT1,
 			SIZESK:     32 + 32 + 32 + 6*polySizeT0 + (5+6)*128,
@@ -102,7 +102,7 @@ func NewDilithium3(randomized ...bool) *Dilithium {
 }
 
 func NewDilithium5(randomized ...bool) *Dilithium {
-	r := 1 //randomized by default
+	r := 1 // randomized by default
 	if len(randomized) == 1 && !randomized[0] {
 		r = 0
 	}

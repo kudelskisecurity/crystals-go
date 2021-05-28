@@ -10,7 +10,7 @@ var K = 2
 func TestExpand(t *testing.T) {
 	t.Parallel()
 	var seed [32]byte
-	copy(seed[:], []byte("very random seed that I will use"))
+	copy(seed[:], "very random seed that I will use")
 	A := expandSeed(seed[:], false, K)
 	Abis := expandSeed(seed[:], false, K)
 	for i := 0; i < K; i++ {

@@ -1,6 +1,6 @@
 package kyber
 
-//const K = 2 //change this to 2,3 or 4 to get Kyber512, 768 or 1012
+// const K = 2 //change this to 2,3 or 4 to get Kyber512, 768 or 1012
 
 const (
 	n            = 256
@@ -15,17 +15,17 @@ const (
 	Kyber512SizePK    = 800
 	Kyber512SizeSK    = 1632
 	Kyber512SizePKESK = 768
-	Kyber512SizeC     = 768 //2*320 + 128
+	Kyber512SizeC     = 768 // 2*320 + 128
 
 	Kyber768SizePK    = 1184
 	Kyber768SizeSK    = 2400
 	Kyber768SizePKESK = 1152
-	Kyber768SizeC     = 1088 //3*320 + 128
+	Kyber768SizeC     = 1088 // 3*320 + 128
 
 	Kyber1024SizePK    = 1568
 	Kyber1024SizeSK    = 3168
 	Kyber1024SizePKESK = 1536
-	Kyber1024SizeC     = 1568 //4*352 + 160
+	Kyber1024SizeC     = 1568 // 4*352 + 160
 )
 
 type Kyber struct {
@@ -40,11 +40,11 @@ type parameters struct {
 	DV              int
 	COMPPOLYSIZE_DU int
 	COMPPOLYSIZE_DV int
-	SIZEPK          int //= K*POLYSIZE + SEEDBYTES
-	SIZESK          int //= SIZEZ + 32 + SIZEPK + K*POLYSIZE
-	SIZEPKESK       int //= K * POLYSIZE
+	SIZEPK          int // = K*POLYSIZE + SEEDBYTES
+	SIZESK          int // = SIZEZ + 32 + SIZEPK + K*POLYSIZE
+	SIZEPKESK       int // = K * POLYSIZE
 	SIZEC           int
-	//SIZEPKEPK       int //= SIZEPK
+	// SIZEPKEPK       int //= SIZEPK
 }
 
 func NewKyber512() *Kyber {

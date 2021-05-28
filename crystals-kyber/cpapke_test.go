@@ -34,7 +34,7 @@ func testKeyGenRep(t *testing.T, k *Kyber) {
 	seed[0] = 34
 	pk, sk := k.PKEKeyGen(seed)
 	pk2, sk2 := k.PKEKeyGen(seed)
-	if !bytes.Equal(pk[:], pk2[:]) || !bytes.Equal(sk[:], sk2[:]) {
+	if !bytes.Equal(pk, pk2) || !bytes.Equal(sk, sk2) {
 		t.Fatalf("Seed in keygen failed")
 	}
 	var r, msg [32]byte
@@ -70,7 +70,7 @@ func testDecrypt(t *testing.T, k *Kyber) {
 	rand.Read(msg[:])
 	c := k.Encrypt(pk, msg[:], r[:])
 	msgRecov := k.Decrypt(sk, c)
-	if !bytes.Equal(msg[:], msgRecov[:]) {
+	if !bytes.Equal(msg[:], msgRecov) {
 		t.Fatal("Failed to decrypt")
 	}
 }
@@ -79,10 +79,10 @@ func testPack(t *testing.T, k *Kyber) {
 	pk, sk := k.PKEKeyGen(nil)
 	pk2 := k.PackPK(k.UnpackPK(pk))
 	sk2 := k.PackPKESK(k.UnpackPKESK(sk))
-	if !bytes.Equal(pk[:], pk2[:]) {
+	if !bytes.Equal(pk, pk2) {
 		t.Fatal("Pack failed")
 	}
-	if !bytes.Equal(sk[:], sk2[:]) {
+	if !bytes.Equal(sk, sk2) {
 		t.Fatal("SK Pack failed")
 	}
 }

@@ -4,18 +4,18 @@ import "crypto/subtle"
 
 // PublicKey holds the pk struct.
 type PublicKey struct {
-	T1  Vec //K
+	T1  Vec // K
 	Rho [SEEDBYTES]byte
 }
 
 // PrivateKey holds the sk struct.
 type PrivateKey struct {
-	S1  Vec //L
-	S2  Vec //K
+	S1  Vec // L
+	S2  Vec // K
 	Rho [SEEDBYTES]byte
 	Key [SEEDBYTES]byte
 	Tr  [SEEDBYTES]byte
-	T0  Vec //K
+	T0  Vec // K
 }
 
 func (d *Dilithium) SIZEPK() int {
@@ -30,7 +30,7 @@ func (d *Dilithium) SIZESIG() int {
 	return d.params.SIZESIG
 }
 
-//PackPK packs a PublicKey into an array of bytes.
+// PackPK packs a PublicKey into an array of bytes.
 func (d *Dilithium) PackPK(pk PublicKey) []byte {
 	packedPK := make([]byte, d.params.SIZEPK)
 	copy(packedPK[:SEEDBYTES], pk.Rho[:])
@@ -38,7 +38,7 @@ func (d *Dilithium) PackPK(pk PublicKey) []byte {
 	return packedPK
 }
 
-//UnpackPK reverses the packing operation.
+// UnpackPK reverses the packing operation.
 func (d *Dilithium) UnpackPK(packedPK []byte) PublicKey {
 	var pk PublicKey
 	copy(pk.Rho[:], packedPK[:SEEDBYTES])
@@ -46,7 +46,7 @@ func (d *Dilithium) UnpackPK(packedPK []byte) PublicKey {
 	return pk
 }
 
-//PackSK packs a PrivateKey into a byte array.
+// PackSK packs a PrivateKey into a byte array.
 func (d *Dilithium) PackSK(sk PrivateKey) []byte {
 	packedSK := make([]byte, d.params.SIZESK)
 	id := 0
@@ -68,14 +68,14 @@ func (d *Dilithium) PackSK(sk PrivateKey) []byte {
 	return packedSK
 }
 
-//PackSKNIST packs a PrivateKey into a byte array but reverses NTT of s1 before (not used for now).
+// PackSKNIST packs a PrivateKey into a byte array but reverses NTT of s1 before (not used for now).
 func (d *Dilithium) PackSKNIST(sk PrivateKey) []byte {
 	s1cpy := sk.S1
 	s1cpy.invntt(d.params.L)
 	return d.PackSK(PrivateKey{Key: sk.Key, Tr: sk.Tr, Rho: sk.Rho, T0: sk.T0, S2: sk.S2, S1: s1cpy})
 }
 
-//UnpackSK reverses the packing operation.
+// UnpackSK reverses the packing operation.
 func (d *Dilithium) UnpackSK(packedSK []byte) PrivateKey {
 	var sk PrivateKey
 	id := 0

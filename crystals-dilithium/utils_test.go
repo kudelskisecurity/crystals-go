@@ -48,7 +48,7 @@ func TestFreeze(t *testing.T) {
 	var p, b Poly
 	p = polyUniform(seed, 0)
 	b = add(p, p)
-	//some coefs must be > Q
+	// some coefs must be > Q
 	c := b
 	c.freeze()
 	for i := uint(0); i < n; i++ {
@@ -96,7 +96,7 @@ func testNTT(t *testing.T) {
 func TestRandPoly(t *testing.T) {
 	t.Parallel()
 	var seed [32]byte
-	copy(seed[:], []byte("very random seed that I will use"))
+	copy(seed[:], "very random seed that I will use")
 	var p, p2 Poly
 	p = polyUniform(seed, 0)
 	p2 = polyUniform(seed, 0)
@@ -127,14 +127,14 @@ func TestSamples(t *testing.T) {
 
 	var p, p2 Poly
 	p = polyUniformEta(seed, 1, ETA)
-	if !p.isBelow(ETA + 1) { //i > eta
+	if !p.isBelow(ETA + 1) { // i > eta
 		t.Fatalf("PolyUniformEta sampled failed %v\n", p)
 	}
 	var rhoP [64]byte
 	io.ReadFull(rand, rhoP[:])
 	GAMMA1 := int32(1 << 17)
 	p2 = polyUniformGamma1(rhoP, 0, GAMMA1)
-	if !p2.isBelow(GAMMA1 + 1) { //if stritcly above
+	if !p2.isBelow(GAMMA1 + 1) { // if stritcly above
 		t.Fatalf("PolyUnifromGamma1 sampled failed  %v\n", p2)
 	}
 }
@@ -142,7 +142,7 @@ func TestSamples(t *testing.T) {
 func TestExpand(t *testing.T) {
 	t.Parallel()
 	var seed [32]byte
-	copy(seed[:], []byte("very random seed that I will use"))
+	copy(seed[:], "very random seed that I will use")
 	K, L := 6, 5
 	A := expandSeed(seed, K, L)
 	Abis := expandSeed(seed, K, L)
@@ -219,7 +219,7 @@ func TestMakeHints(t *testing.T) {
 	r := int32(rand.Intn(q))
 	g2 := d.params.GAMMA2
 	r1, r0 := decompose(r, g2)
-	//useHint( r - f, makeHint( r0 - f, r1 ) ) = r1.
+	// useHint( r - f, makeHint( r0 - f, r1 ) ) = r1.
 	if makeHint(r1, r0, g2) != 0 {
 		t.Fatal("Make hint failed")
 	}
@@ -236,7 +236,7 @@ func TestUseHints(t *testing.T) {
 	g2 := d.params.GAMMA2
 	r1, r0PQ := decompose(r, g2)
 	r0 := r0PQ
-	//useHint( r - f, makeHint( r0 - f, r1 ) ) = r1.
+	// useHint( r - f, makeHint( r0 - f, r1 ) ) = r1.
 	if useHint(r, makeHint(r1, r0, g2), g2) != r1 {
 		t.Fatal("Use hint failed")
 	}
@@ -249,7 +249,7 @@ func TestUseHints(t *testing.T) {
 	}
 }
 
-//test whether we can pack (NTT(s)) the same way as s: answer is no...
+// test whether we can pack (NTT(s)) the same way as s: answer is no...
 /**
 func OneTimeRunTestPackSNTT(t *testing.T) {
 	var seed [64]byte

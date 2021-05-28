@@ -29,9 +29,9 @@ func polyToMsg(p Poly) []byte {
 
 func (p *Poly) compress(d int, polylen int) []byte {
 	c := make([]byte, polylen)
-	switch d { //4,5,10,11 or ?
+	switch d { // 4,5,10,11 or ?
 
-	//size of the poly is N*3/8
+	// size of the poly is N*3/8
 	case 3:
 		var t [8]uint16
 		id := 0
@@ -130,7 +130,7 @@ func (p *Poly) compress(d int, polylen int) []byte {
 	default:
 		panic("bad d value")
 	}
-	return c[:]
+	return c
 }
 
 func decompressPoly(c []byte, d int) Poly {
@@ -240,10 +240,10 @@ func decompressPoly(c []byte, d int) Poly {
 	return p
 }
 
-func pack(v Vec, K int) []byte {
+func pack(v Vec, k int) []byte {
 	var t0, t1 uint16
-	r := make([]byte, K*polysize)
-	for i := 0; i < K; i++ {
+	r := make([]byte, k*polysize)
+	for i := 0; i < k; i++ {
 		for j := 0; j < n/2; j++ {
 			v[i].freeze()
 			t0 = uint16(v[i][2*j])
@@ -256,9 +256,9 @@ func pack(v Vec, K int) []byte {
 	return r
 }
 
-func unpack(r []byte, K int) Vec {
-	v := make(Vec, K)
-	for i := 0; i < K; i++ {
+func unpack(r []byte, k int) Vec {
+	v := make(Vec, k)
+	for i := 0; i < k; i++ {
 		for j := 0; j < n/2; j++ {
 			v[i][2*j] = int16(r[3*j+i*polysize]) | ((int16(r[3*j+1+i*polysize]) << 8) & 0xfff)
 			v[i][2*j+1] = int16(r[3*j+1+i*polysize]>>4) | (int16(r[3*j+2+i*polysize]) << 4)
@@ -267,17 +267,17 @@ func unpack(r []byte, K int) Vec {
 	return v
 }
 
-func (v Vec) compress(d int, polylen int, K int) []byte {
-	c := make([]byte, K*polylen)
-	for i := 0; i < K; i++ {
+func (v Vec) compress(d int, polylen int, k int) []byte {
+	c := make([]byte, k*polylen)
+	for i := 0; i < k; i++ {
 		copy(c[i*polylen:], v[i].compress(d, polylen))
 	}
-	return c[:]
+	return c
 }
 
-func decompressVec(c []byte, d int, buflen, K int) Vec {
-	v := make(Vec, K)
-	for i := 0; i < K; i++ {
+func decompressVec(c []byte, d int, buflen, k int) Vec {
+	v := make(Vec, k)
+	for i := 0; i < k; i++ {
 		v[i] = decompressPoly(c[i*buflen:], d)
 	}
 	return v

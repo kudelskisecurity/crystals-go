@@ -24,7 +24,7 @@ func (k *Kyber) PKEKeyGen(seed []byte) ([]byte, []byte) {
 
 	Ahat := expandSeed(rho[:], false, K)
 
-	//var shat Vec
+	// var shat Vec
 	shat := make(Vec, K)
 	for i := 0; i < K; i++ {
 		shat[i] = polyGetNoise(ETA1, sseed[:], byte(i))
@@ -63,29 +63,29 @@ func (k *Kyber) Encrypt(packedPK, msg, r []byte) []byte {
 
 	if len(r) != SEEDBYTES {
 		r = make([]byte, SEEDBYTES)
-		rand.Read(r[:])
+		rand.Read(r)
 	}
 
 	K := k.params.K
 	pk := k.UnpackPK(packedPK)
-	Ahat := expandSeed(pk.Rho[:], true, K)
+	Ahat := expandSeed(pk.Rho, true, K)
 
-	//var sp, ep Vec
+	// var sp, ep Vec
 	sp := make(Vec, K)
 	for i := 0; i < K; i++ {
-		sp[i] = polyGetNoise(k.params.ETA1, r[:], byte(i)) //use i
+		sp[i] = polyGetNoise(k.params.ETA1, r, byte(i)) // use i
 		sp[i].ntt()
 		sp[i].reduce()
 	}
 	ep := make(Vec, K)
 	for i := 0; i < K; i++ {
-		ep[i] = polyGetNoise(eta2, r[:], byte(i+K))
+		ep[i] = polyGetNoise(eta2, r, byte(i+K))
 		ep[i].ntt()
 	}
-	epp := polyGetNoise(eta2, r[:], byte(2*K))
+	epp := polyGetNoise(eta2, r, byte(2*K))
 	epp.ntt()
 
-	//var u Vec
+	// var u Vec
 	u := make(Vec, K)
 	for i := 0; i < K; i++ {
 		u[i] = vecPointWise(Ahat[i], sp, K)
@@ -108,9 +108,9 @@ func (k *Kyber) Encrypt(packedPK, msg, r []byte) []byte {
 	v.fromMont()
 
 	c := make([]byte, k.params.SIZEC)
-	copy(c[:], u.compress(k.params.DU, k.params.COMPPOLYSIZE_DU, K))
+	copy(c, u.compress(k.params.DU, k.params.COMPPOLYSIZE_DU, K))
 	copy(c[K*k.params.COMPPOLYSIZE_DU:], v.compress(k.params.DV, k.params.COMPPOLYSIZE_DV))
-	return c[:]
+	return c
 }
 
 func (k *Kyber) Decrypt(packedSK, c []byte) []byte {

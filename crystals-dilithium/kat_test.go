@@ -58,10 +58,10 @@ func (g *DRBG) Fill(x []byte) {
 		g.incV()
 		b.Encrypt(block[:], g.v[:])
 		if len(x) < 16 {
-			copy(x[:], block[:len(x)])
+			copy(x, block[:len(x)])
 			break
 		}
-		copy(x[:], block[:])
+		copy(x, block[:])
 		x = x[16:]
 	}
 	g.update(nil)
@@ -121,10 +121,10 @@ func testKAT(t *testing.T, d *Dilithium, name string) {
 
 	var seed [48]byte
 	for i := 0; i < 48; i++ {
-		seed[i] = byte(i) //entropy_input
+		seed[i] = byte(i) // entropy_input
 	}
 
-	//randombytes_init(entropy_input, NULL, 256);
+	// randombytes_init(entropy_input, NULL, 256);
 	g := NewDRBG(&seed)
 	for {
 		line, err := r.ReadString('\n')
@@ -149,7 +149,7 @@ func testKAT(t *testing.T, d *Dilithium, name string) {
 					t.Fatal("expected 48 byte seed")
 				}
 				g.Fill(seed[:])
-				if !bytes.Equal(seed[:], hval[:]) {
+				if !bytes.Equal(seed[:], hval) {
 					t.Fatal("Seed not well crafted")
 				}
 				g2 := NewDRBG(&seed)
@@ -163,12 +163,12 @@ func testKAT(t *testing.T, d *Dilithium, name string) {
 				t.Fatal("mlen != 33*(i+1)")
 			}
 			msg = make([]byte, mlen)
-			g.Fill(msg[:])
+			g.Fill(msg)
 		case "msg":
 			if len(hval) != mlen {
 				t.Fatal("mlen != len(msg)")
 			}
-			if !bytes.Equal(msg[:], hval[:]) {
+			if !bytes.Equal(msg, hval) {
 				t.Fatal("Msg is not correct")
 			}
 		case "pk":
@@ -176,7 +176,7 @@ func testKAT(t *testing.T, d *Dilithium, name string) {
 				if len(hval) != d.params.SIZEPK {
 					t.Fatal("pk size mismatch")
 				}
-				if !bytes.Equal(pk[:], hval[:]) {
+				if !bytes.Equal(pk, hval) {
 					t.Fatal("pk mismatch")
 				}
 			}
@@ -184,7 +184,7 @@ func testKAT(t *testing.T, d *Dilithium, name string) {
 			if len(hval) != d.params.SIZESK {
 				t.Fatal("sk size mismatch")
 			}
-			if !bytes.Equal(sk[:], hval[:]) {
+			if !bytes.Equal(sk, hval) {
 				t.Fatal("sk mismatch")
 			}
 		case "smlen":
@@ -205,7 +205,7 @@ func testKAT(t *testing.T, d *Dilithium, name string) {
 			if !d.Verify(pk, msg, sig) {
 				t.Fatal("failed to validate")
 			}
-			//println("one iter ok")
+			// println("one iter ok")
 		}
 	}
 }

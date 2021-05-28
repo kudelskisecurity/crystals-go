@@ -56,7 +56,7 @@ func polyUniform(rho []byte, nonce []byte) Poly {
 	var outbuf [shake128Rate]byte
 
 	state := sha3.NewShake128()
-	state.Write(rho[:])
+	state.Write(rho)
 	state.Write(nonce)
 	state.Read(outbuf[:])
 
@@ -72,9 +72,9 @@ func polyUniform(rho []byte, nonce []byte) Poly {
 func polyGetNoise(eta int, seed []byte, nonce byte) Poly {
 	outbuf := make([]byte, eta*n/4)
 	state := sha3.NewShake256()
-	state.Write(seed[:])
+	state.Write(seed)
 	state.Write([]byte{nonce})
-	state.Read(outbuf[:])
+	state.Read(outbuf)
 	var p Poly
 	if eta == 3 {
 		p = polyCBD3(outbuf)
