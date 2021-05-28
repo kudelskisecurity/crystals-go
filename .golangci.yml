@@ -7,11 +7,11 @@ linters:
 
   # highly recommended:
   #  - revive # many exported functions and fields need documentation
+  #  - errcheck # error return values are not checked; Misses API rework (error return values)
+  #  - gosec # same as errcheck, plus use of weak random number generator (math/rand instead of crypto/rand)
 
   # pending (either enable and handle, or deliberately drop):
-  #  - errcheck
   #  - gocritic
-  #  - gosec
   enable:
     - asciicheck
     - deadcode
