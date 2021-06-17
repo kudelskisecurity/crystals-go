@@ -19,13 +19,6 @@ func vecAdd(u, v Vec, L int) Vec {
 	return w
 }
 
-//vecFreeze applies freeze to each polynomial
-func (v Vec) vecFreeze(L int) {
-	for i := 0; i < L; i++ {
-		v[i].freeze()
-	}
-}
-
 //vecAccPointWise performs mutliplication of two vec
 func vecAccPointWise(u, v Vec, L int) Poly {
 	var w, t Poly

@@ -59,7 +59,7 @@ func TestFreeze(t *testing.T) {
 
 /** Test NTT **/
 
-func testNTT(t *testing.T) {
+func TestNTT(t *testing.T) {
 	var seed [32]byte
 	rand := cRand.Reader
 	io.ReadFull(rand, seed[:])
@@ -259,7 +259,7 @@ func OneTimeRunTestPackSNTT(t *testing.T) {
 	}
 }**/
 
-func TestNTT(t *testing.T) {
+func TestNTT1(t *testing.T) {
 	var seed [SEEDBYTES]byte
 	for i := 0; i < 100; i++ {
 		cRand.Read(seed[:])

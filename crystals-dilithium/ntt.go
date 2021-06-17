@@ -87,25 +87,9 @@ func (v Vec) ntt(L int) {
 	}
 }
 
-//invntt perfroms in place backward NTT
-func (v Vec) invntt(L int) {
-	for i := 0; i < L; i++ {
-		v[i].invntt()
-	}
-}
-
 //fqmul performs a multiplication in the Montgomery domain
 func fqmul(a, b int32) int32 {
 	return montgomeryReduce(int64(a) * int64(b))
-}
-
-func bsmul(a0, a1, b0, b1, zeta int32) (int32, int32) {
-	r0 := fqmul(a1, b1)
-	r0 = fqmul(r0, zeta)
-	r0 += fqmul(a0, b0)
-	r1 := fqmul(a0, b1)
-	r1 += fqmul(a1, b0)
-	return r0, r1
 }
 
 //montgomeryReduce is used to reduce a montgomery coefficient  [0, RQ]
@@ -119,13 +103,6 @@ func montgomeryReduce(a int64) int32 {
 func (p *Poly) tomont() {
 	for i := 0; i < n; i++ {
 		p[i] = montgomeryReduce(int64(p[i]))
-	}
-}
-
-//barretReduce converts a poly to its barret representation
-func (p *Poly) barretReduce() {
-	for i := 0; i < n; i++ {
-		p[i] = barretReduce(p[i])
 	}
 }
 
