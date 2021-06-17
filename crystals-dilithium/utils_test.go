@@ -57,40 +57,6 @@ func TestFreeze(t *testing.T) {
 	}
 }
 
-/** Test NTT **/
-
-func TestNTT(t *testing.T) {
-	var seed [32]byte
-	rand := cRand.Reader
-	io.ReadFull(rand, seed[:])
-	var p, p2 Poly
-	p = polyUniform(seed, 0)
-	p.ntt()
-	for i := uint(0); i < n; i++ {
-		if p[i] > 18*q {
-			t.Fatalf("NTT generated too big coeffs %d", p[i])
-		}
-	}
-	p.invntt()
-	for i := uint(0); i < n; i++ {
-		if p[i] > 2*q {
-			t.Fatalf("Inv NTT results in bad coeffs %d", p[i])
-		}
-	}
-	p = polyUniform(seed, 0)
-	p2 = p
-	p.ntt()
-	p.reduce()
-	p.invntt()
-	p.reduce()
-	p.addQ()
-	for i := 0; i < n; i++ {
-		if p[i] != p2[i] {
-			t.Fatalf("NTT changed a coef %d to %d", p[i], p2[i])
-		}
-	}
-}
-
 func TestRandPoly(t *testing.T) {
 	var seed [32]byte
 	copy(seed[:], []byte("very random seed that I will use"))
