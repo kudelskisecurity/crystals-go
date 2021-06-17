@@ -29,8 +29,8 @@ func (g *randomBytes) incV() {
 	}
 }
 
-// AES256_CTR_randomBytes_Update(pd, &g.key, &g.v)
-func (g *randomBytes) randombyte_update(pd *[48]byte) {
+// AES256_CTR_randomBytes_update(pd, &g.key, &g.v)
+func (g *randomBytes) randombyteUpdate(pd *[48]byte) {
 	var buf [48]byte
 	b, _ := aes.NewCipher(g.key[:])
 	for i := 0; i < 3; i++ {
@@ -47,8 +47,8 @@ func (g *randomBytes) randombyte_update(pd *[48]byte) {
 }
 
 // randombyte_init(seed, NULL, 256)
-func randombyte_init(seed *[48]byte) (g randomBytes) {
-	g.randombyte_update(seed)
+func randombyteInit(seed *[48]byte) (g randomBytes) {
+	g.randombyteUpdate(seed)
 	return
 }
 
@@ -67,7 +67,7 @@ func (g *randomBytes) randombytes(x []byte) {
 		copy(x[:], block[:])
 		x = x[16:]
 	}
-	g.randombyte_update(nil)
+	g.randombyteUpdate(nil)
 }
 
 func TestKAT(t *testing.T) {
@@ -102,16 +102,16 @@ func testKAT(t *testing.T, k *Kyber) {
 	var katfile io.ReadCloser
 		gotkat := false
 		for _, f := range zipfile.File {
-			GOLDEN_KAT := fmt.Sprintf("PQCkemKAT_%d.rsp", k.params.SIZESK)
-			if strings.HasSuffix(f.Name, GOLDEN_KAT) {
+			goldenKAT := fmt.Sprintf("PQCkemKAT_%d.rsp", k.params.SIZESK)
+			if strings.HasSuffix(f.Name, goldenKAT) {
 				katfile, _ = f.Open()
 				gotkat = true
 				break
 			}
 		}
 	**/
-	GOLDEN_KAT := fmt.Sprintf("PQCkemKAT_%d.rsp", k.params.SIZESK)
-	katfile, err := os.Open("testdata/" + GOLDEN_KAT)
+	goldenKAT := fmt.Sprintf("PQCkemKAT_%d.rsp", k.params.SIZESK)
+	katfile, err := os.Open("testdata/" + goldenKAT)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -128,7 +128,7 @@ func testKAT(t *testing.T, k *Kyber) {
 	kseed := make([]byte, 2*SEEDBYTES)
 	eseed := make([]byte, SEEDBYTES)
 
-	g := randombyte_init(&seed)
+	g := randombyteInit(&seed)
 	opk, pk := make([]byte, k.SIZEPK()), make([]byte, k.SIZEPK())
 	osk, sk := make([]byte, k.SIZESK()), make([]byte, k.SIZESK())
 	var msg []byte
@@ -162,7 +162,7 @@ func testKAT(t *testing.T, k *Kyber) {
 					t.Fatal("expected 48 byte seed")
 				}
 				g.randombytes(seed[:])
-				g2 := randombyte_init(&seed)
+				g2 := randombyteInit(&seed)
 				g2.randombytes(kseed[:32])
 				g2.randombytes(kseed[32:])
 				g2.randombytes(eseed)
