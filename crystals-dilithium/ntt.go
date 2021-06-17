@@ -91,33 +91,3 @@ func (v Vec) ntt(L int) {
 func fqmul(a, b int32) int32 {
 	return montgomeryReduce(int64(a) * int64(b))
 }
-
-//montgomeryReduce is used to reduce a montgomery coefficient  [0, RQ]
-func montgomeryReduce(a int64) int32 {
-	t := int32(a * qInv)
-	t = int32((a - int64(t)*q) >> 32)
-	return t
-}
-
-//tomont converts a poly to its montgomery representation
-func (p *Poly) tomont() {
-	for i := 0; i < n; i++ {
-		p[i] = montgomeryReduce(int64(p[i]))
-	}
-}
-
-//Computes the integer in {-(q-1)/2,...,(q-1)/2} congruent to a modulo q
-func barretReduce(a int32) int32 {
-	v := int32(((uint32(1) << 26) + uint32(q/2)) / uint32(q))
-	t := int32(v) * int32(a) >> 26
-	t *= int32(q)
-	return a - t
-}
-
-//fromMont converts back to [0, Q]
-func (p *Poly) fromMont() {
-	inv := uint64(8265825)
-	for i := uint(0); i < n; i++ {
-		p[i] = int32((uint64(p[i]) * inv) % q)
-	}
-}

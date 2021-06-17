@@ -77,7 +77,7 @@ func (a Poly) isBelow(bound int32) bool {
 	return res
 }
 
-//rej fills a with coefs in [0, Q) generated with buf
+//rej fills a with coefs in [0, Q) generated with buf using rejection sampling
 func rej(a []int32, buf []byte) int {
 	ctr, buflen, alen := 0, len(buf), len(a)
 	for pos := 0; pos+3 < buflen && ctr < alen; pos += 3 {
@@ -117,7 +117,7 @@ func polyUniform(seed [SEEDBYTES]byte, nonce uint16) Poly {
 	return a
 }
 
-//rejEta fills a with coefs in [0, ETA) generated with buf
+//rejEta fills a with coefs in [0, ETA) generated with buf using rejection sampling
 func rejEta(a []int32, buf []byte, ETA int32) int {
 	ctr, buflen, alen := 0, len(buf), len(a)
 	for pos := 0; pos < buflen && ctr < alen; pos++ {
@@ -224,4 +224,19 @@ func polyUseHint(u, h Poly, GAMMA2 int32) Poly {
 		p[j] = useHint(u[j], h[j], GAMMA2)
 	}
 	return p
+}
+
+//tomont converts a poly to its montgomery representation
+func (p *Poly) tomont() {
+	for i := 0; i < n; i++ {
+		p[i] = montgomeryReduce(int64(p[i]))
+	}
+}
+
+//fromMont converts back to [0, Q]
+func (p *Poly) fromMont() {
+	inv := uint64(8265825)
+	for i := uint(0); i < n; i++ {
+		p[i] = int32((uint64(p[i]) * inv) % q)
+	}
 }

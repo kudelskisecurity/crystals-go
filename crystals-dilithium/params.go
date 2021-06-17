@@ -34,7 +34,7 @@ type Dilithium struct {
 	params *parameters
 }
 
-//parameters hold all internal parameters used in a dilithium scheme
+//parameters hold all internal varying parameters used in a dilithium scheme
 type parameters struct {
 	T          int
 	K          int
