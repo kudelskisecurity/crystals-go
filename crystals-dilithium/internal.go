@@ -4,33 +4,34 @@ import (
 	"golang.org/x/crypto/sha3"
 )
 
-// Reduce32 maps a to the [-Q, Q] domain.
+// reduce32 maps a to the [-Q, Q] domain.
 func reduce32(a int32) int32 {
 	t := (a + (1 << 22)) >> 23
 	t = a - t*q
 	return t
 }
 
+// addQ maps a to a "positive" representation in constant time.
 func addQ(a int32) int32 {
 	a += (a >> 31) & q
 	return a
 }
 
-// Freeze maps a to the [0, Q] domain.
+// freeze maps a to the [0, Q] domain.
 func freeze(a int32) int32 {
 	a = reduce32(a)
 	a = addQ(a)
 	return a
 }
 
-// Power2Round returns a1 and a0+Q such that a = a1*2^D+a0.
+// power2Round returns a1 and a0+Q such that a = a1*2^D+a0.
 func power2Round(a int32) (int32, int32) {
 	a1 := (a + (1 << (d - 1)) - 1) >> d
 	a0 := a - (a1 << d)
 	return a1, a0
 }
 
-// Decompose returns a1 and a0+Q such that a = a1*alpha + a0.
+// decompose returns a1 and a0+Q such that a = a1*alpha + a0.
 func decompose(a int32, gamma2 int32) (int32, int32) {
 	a1 := (a + 127) >> 7
 
@@ -47,7 +48,7 @@ func decompose(a int32, gamma2 int32) (int32, int32) {
 	return a1, a0
 }
 
-// MakeHint returns 1 iff a0 overflows a1.
+// makeHint returns 1 iff a0 overflows a1.
 func makeHint(a1, a0 int32, gamma2 int32) int32 {
 	if a0 > gamma2 || a0 < -gamma2 || (a0 == -gamma2 && a1 != 0) {
 		return 1
@@ -55,7 +56,7 @@ func makeHint(a1, a0 int32, gamma2 int32) int32 {
 	return 0
 }
 
-// UseHint computes the real HighBits of a.
+// useHint computes the real high bits of a.
 func useHint(a int32, hint int32, gamma2 int32) int32 {
 	a1, a0 := decompose(a, gamma2)
 	if hint == 0 {
@@ -64,7 +65,7 @@ func useHint(a int32, hint int32, gamma2 int32) int32 {
 	if a0 > 0 {
 		if gamma2 == (q-1)/32 {
 			return (a1 + 1) & 15
-		} // gamma2 == (q-1)/88
+		}
 		if a1 == 43 {
 			return 0
 		}
@@ -72,17 +73,17 @@ func useHint(a int32, hint int32, gamma2 int32) int32 {
 	}
 	if gamma2 == (q-1)/32 {
 		return (a1 - 1) & 15
-	} // gamma2 == (q-1)/88
+	}
 	if a1 == 0 {
 		return 43
 	}
 	return a1 - 1
 }
 
-// Mat is used to hold A.
+// Mat is used to hold the matrix A.
 type Mat []Vec
 
-// ExpandSeed uses rho to create a KxL matrix of uniform polynomials (A).
+// expandSeed uses rho to create A, a KxL matrix of uniform polynomials.
 func expandSeed(rho [SEEDBYTES]byte, k, l int) Mat {
 	A := make(Mat, k)
 	for i := 0; i < k; i++ {
@@ -94,7 +95,7 @@ func expandSeed(rho [SEEDBYTES]byte, k, l int) Mat {
 	return A
 }
 
-// Challenge creates a Poly with exactly 60 1's and the rest 0's.
+// challenge creates a Poly with exactly T 1's and the rest 0's.
 func challenge(hc []byte, t int) Poly {
 	var c Poly
 	var outbuf [shake256Rate]byte
@@ -126,4 +127,19 @@ func challenge(hc []byte, t int) Poly {
 	}
 
 	return c
+}
+
+// Computes the integer in {-(q-1)/2,...,(q-1)/2} congruent to a modulo q.
+func barretReduce(a int32) int32 {
+	v := int32(((uint32(1) << 26) + uint32(q/2)) / uint32(q))
+	t := v * a >> 26
+	t *= int32(q)
+	return a - t
+}
+
+// montgomeryReduce is used to reduce a montgomery coefficient  [0, RQ].
+func montgomeryReduce(a int64) int32 {
+	t := int32(a * qInv)
+	t = int32((a - int64(t)*q) >> 32)
+	return t
 }

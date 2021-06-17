@@ -95,6 +95,10 @@ Finally, we noticed that some packages (for example: [binary](https://golang.org
 Our API outputs slices, which are variable-sized arrays, and function calls in Go return non-constant values, breaking the compatibility with such packages.
 For applications where resources need to be allocated using constant-size structures, we hardcode the size of our scheme's outputs for each security level, and expose them as constants as part of the Kyber/Dilithium packages. Have a look at the [param.go](https://github.com/kudelskisecurity/crystals-go/blob/main/crystals-dilithium/params.go#L19) file for an example.
 
+### Errors
+
+In order to keep the API pretty simple, any error will result in a *nil* ouptup (*false* is the case or *Verify*). For now the error is printed, but we are working on Log Levels.
+
 ## Security
 
 Our library stands out because of its security properties. Among the vulnerabilities reported on the original implementation, we integrate countermeasures for most of them, providing a library that is both *theoretically* and *practically* secure. We predict that new attacks will be published as the candidates are refined, and expect changes in the code to occur as the security of our library is treated as a continuous process. 

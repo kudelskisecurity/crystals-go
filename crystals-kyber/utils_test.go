@@ -5,6 +5,7 @@ import (
 	"testing"
 )
 
+// K arbitrarily set to 2.
 var K = 2
 
 func TestExpand(t *testing.T) {

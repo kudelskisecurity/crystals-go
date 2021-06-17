@@ -18,14 +18,17 @@ type PrivateKey struct {
 	T0  Vec // K
 }
 
+// SIZEPK returns the size in bytes of the public key of a dilithium instance.
 func (d *Dilithium) SIZEPK() int {
 	return d.params.SIZEPK
 }
 
+// SIZESK returns the size in bytes of the secret key of a dilithium instance.
 func (d *Dilithium) SIZESK() int {
 	return d.params.SIZESK
 }
 
+// SIZESIG returns the size in bytes of the signature of a dilithium instance.
 func (d *Dilithium) SIZESIG() int {
 	return d.params.SIZESIG
 }
@@ -38,7 +41,7 @@ func (d *Dilithium) PackPK(pk PublicKey) []byte {
 	return packedPK
 }
 
-// UnpackPK reverses the packing operation.
+// UnpackPK reverses the packing operation and outputs a PublicKey struct.
 func (d *Dilithium) UnpackPK(packedPK []byte) PublicKey {
 	var pk PublicKey
 	copy(pk.Rho[:], packedPK[:SEEDBYTES])
@@ -68,14 +71,7 @@ func (d *Dilithium) PackSK(sk PrivateKey) []byte {
 	return packedSK
 }
 
-// PackSKNIST packs a PrivateKey into a byte array but reverses NTT of s1 before (not used for now).
-func (d *Dilithium) PackSKNIST(sk PrivateKey) []byte {
-	s1cpy := sk.S1
-	s1cpy.invntt(d.params.L)
-	return d.PackSK(PrivateKey{Key: sk.Key, Tr: sk.Tr, Rho: sk.Rho, T0: sk.T0, S2: sk.S2, S1: s1cpy})
-}
-
-// UnpackSK reverses the packing operation.
+// UnpackSK reverses the packing operation and outputs a PrivateKey struct.
 func (d *Dilithium) UnpackSK(packedSK []byte) PrivateKey {
 	var sk PrivateKey
 	id := 0
