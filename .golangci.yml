@@ -6,7 +6,6 @@ linters:
   disable-all: true
 
   # highly recommended:
-  #  - revive # many exported functions and fields need documentation
   #  - errcheck # error return values are not checked; Misses API rework (error return values)
   #  - gosec # same as errcheck, plus Potential file inclusion via variable
 
@@ -47,6 +46,7 @@ linters:
     - paralleltest
     - prealloc
     - predeclared
+    - revive
     - rowserrcheck
     - staticcheck
     - structcheck
