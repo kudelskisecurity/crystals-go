@@ -78,7 +78,7 @@ func TestKAT(t *testing.T) {
 
 func testKAT(t *testing.T, d *Dilithium, name string) {
 
-	GOLDEN_KAT := fmt.Sprintf("PQCsignKAT_%s.rsp", name)
+	goldenKAT := fmt.Sprintf("PQCsignKAT_%s.rsp", name)
 	/**
 	GOLDEN_ZIP := "https://pq-crystals.org/dilithium/data/dilithium-submission-nist-round3.zip"
 	os.Mkdir("testdata", 0755)
@@ -93,22 +93,22 @@ func testKAT(t *testing.T, d *Dilithium, name string) {
 		zipfile, _ = zip.OpenReader(cached)
 	}
 	if d.params.RANDOMIZED == 0 {
-		GOLDEN_KAT = fmt.Sprintf("PQCsignKAT_impldeter%d.rsp", d.SIZESK())
+		goldenKAT = fmt.Sprintf("PQCsignKAT_impldeter%d.rsp", d.SIZESK())
 	}
 
 	var katfile io.ReadCloser
 	gotkat := false
 	for _, f := range zipfile.File {
-		if strings.HasSuffix(f.Name, GOLDEN_KAT) {
+		if strings.HasSuffix(f.Name, goldenKAT) {
 			katfile, _ = f.Open()
 			gotkat = true
 			break
 		}
 	}
 	if !gotkat {
-		t.Fatalf("no file names %s\n", GOLDEN_KAT)
+		t.Fatalf("no file names %s\n", goldenKAT)
 	}**/
-	katfile, err := os.Open("testdata/" + GOLDEN_KAT)
+	katfile, err := os.Open("testdata/" + goldenKAT)
 	if err != nil {
 		t.Fatal(err)
 	}

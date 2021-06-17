@@ -8,6 +8,9 @@ import (
 	"golang.org/x/crypto/sha3"
 )
 
+//KeyGen creates a public and private key pair.
+//A 32 byte long seed can be given as argument. If a nil seed is given, the seed is generated using Go crypto's random number generator.
+//The keys returned are packed into byte arrays.
 func (d *Dilithium) KeyGen(seed []byte) ([]byte, []byte) {
 
 	if seed == nil || len(seed) != SEEDBYTES {
@@ -59,7 +62,10 @@ func (d *Dilithium) KeyGen(seed []byte) ([]byte, []byte) {
 	return d.PackPK(PublicKey{T1: t1, Rho: rho}), d.PackSK(PrivateKey{Rho: rho, Key: key, Tr: tr, S1: s1, S2: s2, T0: t0})
 }
 
-//Sign uses to PrivateKey to compute the signature om msg.
+//Sign produces a signature on the given msg using the secret signing key.
+//The signing key must be given as packed byte array.
+//The message should also be a byte array.
+//The returned signature is packed into a byte array. If an error occurs during the signature process, a nil signature is returned.
 func (d *Dilithium) Sign(packedSK, msg []byte) []byte {
 	if len(packedSK) != d.SIZESK() {
 		println("Cannot sign with this key.")
@@ -87,11 +93,9 @@ func (d *Dilithium) Sign(packedSK, msg []byte) []byte {
 	rand.Read(rhoPRand[:])
 	subtle.ConstantTimeCopy(d.params.RANDOMIZED, rhoP[:], rhoPRand[:])
 
-	s1hat := sk.S1.copy() //what if we store the NTT transform in sk? sk.S1 isn't used
-	//current PackS function is lossy on NTT(s1) because the coefs are too big - so does not work yet
-	//Could remove the need for copy by changing the way we give sk (copy)
-	s2hat := sk.S2.copy() //same question
-	t0hat := sk.T0.copy() //same question
+	s1hat := sk.S1.copy()
+	s2hat := sk.S2.copy()
+	t0hat := sk.T0.copy()
 	s1hat.ntt(L)
 	s2hat.ntt(K)
 	t0hat.ntt(K)
@@ -184,7 +188,11 @@ rej:
 	return d.PackSig(z, h, hc[:])
 }
 
-//Verify uses the public key to verify a dilithium signature on the msg
+//Verify uses the verification key to verify a signature given a msg.
+//The public key and signature must be given as packed byte arrays.
+//The message should be a byte array.
+//The result of the verificatino is returned as a boolean, true is the verificatino succeeded, false otherwise.
+//If an error occurs during the verification, a false is returned.
 func (d *Dilithium) Verify(packedPK, msg, sig []byte) bool {
 	if len(sig) != d.SIZESIG() || len(packedPK) != d.SIZEPK() {
 		return false
@@ -216,7 +224,7 @@ func (d *Dilithium) Verify(packedPK, msg, sig []byte) bool {
 	chat := c
 	chat.ntt()
 
-	t1hat := pk.T1.copy() //tmp2
+	t1hat := pk.T1.copy()
 
 	w1 := make(Vec, K)
 	for i := 0; i < K; i++ {
@@ -224,12 +232,12 @@ func (d *Dilithium) Verify(packedPK, msg, sig []byte) bool {
 
 		t1hat[i].shift()
 		t1hat[i].ntt()
-		t1hat[i] = montMul(chat, t1hat[i]) //ct1x2^d
+		t1hat[i] = montMul(chat, t1hat[i])
 
 		w1[i] = sub(w1[i], t1hat[i])
 		w1[i].reduce()
 		w1[i].invntt()
-		w1[i].addQ() //Az-ct1x2^d
+		w1[i].addQ()
 		w1[i] = polyUseHint(w1[i], h[i], d.params.GAMMA2)
 	}
 	var hc2 [SEEDBYTES]byte

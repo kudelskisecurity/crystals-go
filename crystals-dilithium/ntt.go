@@ -37,7 +37,7 @@ var zetas = [n]int32{
 
 var f = int32(41978) //int32(((uint64(MONT) * MONT % Q) * (Q - 1) % Q) * ((Q - 1) >> 8) % Q)
 
-//NTT performs in place forward NTT
+//ntt performs in place forward NTT
 func (p *Poly) ntt() {
 	var len, start, j, k uint
 	var zeta, t int32
@@ -56,7 +56,7 @@ func (p *Poly) ntt() {
 	}
 }
 
-//InvNTT perfors in place backward NTT and multiplication by Montgomery factor 2^32.
+//invntt perfors in place backward NTT and multiplication by Montgomery factor 2^32.
 func (p *Poly) invntt() {
 	var len, start, j, k uint
 	var zeta, t int32
@@ -80,20 +80,21 @@ func (p *Poly) invntt() {
 	}
 }
 
-//VecLNTT performs in place NTT
+//ntt performs in place NTT
 func (v Vec) ntt(L int) {
 	for i := 0; i < L; i++ {
 		v[i].ntt()
 	}
 }
 
-//VecLInvNTT perfroms in place backward NTT
+//invntt perfroms in place backward NTT
 func (v Vec) invntt(L int) {
 	for i := 0; i < L; i++ {
 		v[i].invntt()
 	}
 }
 
+//fqmul performs a multiplication in the Montgomery domain
 func fqmul(a, b int32) int32 {
 	return montgomeryReduce(int64(a) * int64(b))
 }
@@ -107,20 +108,21 @@ func bsmul(a0, a1, b0, b1, zeta int32) (int32, int32) {
 	return r0, r1
 }
 
-//montgomeryReduce is used to reduce a coefficient to [0, Q]
+//montgomeryReduce is used to reduce a montgomery coefficient  [0, RQ]
 func montgomeryReduce(a int64) int32 {
 	t := int32(a * qInv)
 	t = int32((a - int64(t)*q) >> 32)
 	return t
 }
 
+//tomont converts a poly to its montgomery representation
 func (p *Poly) tomont() {
-	//	f := int32((uint64(1) << 32) % uint64(q))
 	for i := 0; i < n; i++ {
 		p[i] = montgomeryReduce(int64(p[i]))
 	}
 }
 
+//barretReduce converts a poly to its barret representation
 func (p *Poly) barretReduce() {
 	for i := 0; i < n; i++ {
 		p[i] = barretReduce(p[i])
@@ -130,13 +132,12 @@ func (p *Poly) barretReduce() {
 //Computes the integer in {-(q-1)/2,...,(q-1)/2} congruent to a modulo q
 func barretReduce(a int32) int32 {
 	v := int32(((uint32(1) << 26) + uint32(q/2)) / uint32(q))
-
 	t := int32(v) * int32(a) >> 26
-	//t := int16((int32(v)*int32(a) + (1 << 25)) >> 26)
 	t *= int32(q)
 	return a - t
 }
 
+//fromMont converts back to [0, Q]
 func (p *Poly) fromMont() {
 	inv := uint64(8265825)
 	for i := uint(0); i < n; i++ {

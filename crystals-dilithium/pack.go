@@ -1,6 +1,6 @@
 package dilithium
 
-//PackT1 returns the byte representation of v
+//packT1 returns the byte representation of v
 func packT1(v Vec, K int) []byte {
 	r := make([]byte, K*polySizeT1)
 
@@ -16,7 +16,7 @@ func packT1(v Vec, K int) []byte {
 	return r
 }
 
-//UnpackT1 reverses the packing operation
+//pnpackT1 reverses the packing operation
 func unpackT1(r []byte, K int) Vec {
 	v := make(Vec, K)
 	for j := 0; j < K; j++ {
@@ -30,7 +30,7 @@ func unpackT1(r []byte, K int) Vec {
 	return v
 }
 
-//PackT0 packs t0
+//packT0 packs t0
 func packT0(v Vec, K int) []byte {
 	r := make([]byte, K*polySizeT0)
 	t := make([]uint32, 8)
@@ -97,7 +97,7 @@ func unpackT0(a []byte, K int) Vec {
 	return v
 }
 
-//PackW1 packs a w1 poly
+//packW1 packs a w1 poly
 func packW1(v Vec, L, POLYSIZEW1 int, GAMMA2 int32) []byte {
 	r := make([]byte, L*POLYSIZEW1)
 	if GAMMA2 == (q-1)/88 {
@@ -118,7 +118,7 @@ func packW1(v Vec, L, POLYSIZEW1 int, GAMMA2 int32) []byte {
 	return r
 }
 
-//PackS packs a S Vec L poly
+//packS packs a S vec
 func packS(v Vec, L, POLYSIZES int, ETA int32) []byte {
 	r := make([]byte, L*POLYSIZES)
 	if ETA == 4 {
@@ -153,6 +153,7 @@ func packS(v Vec, L, POLYSIZES int, ETA int32) []byte {
 	return r
 }
 
+//unpackS reverses the packing of an S vec
 func unpackS(r []byte, L, POLYSIZES int, ETA int32) Vec {
 	v := make(Vec, L)
 	if ETA == 4 {
@@ -182,7 +183,7 @@ func unpackS(r []byte, L, POLYSIZES int, ETA int32) Vec {
 	return v
 }
 
-//PackZ
+//packZ packs a Z vec
 func packZ(v Vec, L, POLYSIZEZ int, GAMMA1 int32) []byte {
 	r := make([]byte, L*POLYSIZEZ)
 	if GAMMA1 == (1 << 17) {
@@ -223,7 +224,7 @@ func packZ(v Vec, L, POLYSIZEZ int, GAMMA1 int32) []byte {
 	return r
 }
 
-//UnpackZ reverses the packing operation
+//unpackZ reverses the packing operation
 func unpackZ(buf []byte, L, POLYSIZEZ int, GAMMA1 int32) Vec {
 	v := make(Vec, L)
 	if GAMMA1 == (1 << 17) {
@@ -241,7 +242,7 @@ func unpackZ(buf []byte, L, POLYSIZEZ int, GAMMA1 int32) Vec {
 			}
 		}
 		return v
-	} //else GAMMA1 == (1 << 19)
+	}
 	for j := 0; j < L; j++ {
 		for i := 0; i < n/2; i++ {
 			v[j][2*i+0] = int32(buf[j*POLYSIZEZ+5*i+0]) | (int32(buf[j*POLYSIZEZ+5*i+1]) << 8) | (int32(buf[j*POLYSIZEZ+5*i+2])<<16)&0xFFFFF
@@ -253,7 +254,7 @@ func unpackZ(buf []byte, L, POLYSIZEZ int, GAMMA1 int32) Vec {
 	return v
 }
 
-//PackH
+//packH packs an H vec
 func packH(v Vec, K int, OMEGA int) []byte {
 	buf := make([]byte, OMEGA+K)
 	off := 0
@@ -269,6 +270,7 @@ func packH(v Vec, K int, OMEGA int) []byte {
 	return buf[:]
 }
 
+//unpackH reverses the packing operation
 func unpackH(buf []byte, L int, OMEGA int) Vec {
 	v := make(Vec, L)
 	k := uint8(0)
@@ -293,6 +295,7 @@ func unpackH(buf []byte, L int, OMEGA int) Vec {
 	return v
 }
 
+//PackSig packs a dilithium signature into a byte array
 func (d *Dilithium) PackSig(z Vec, h Vec, hc []byte) []byte {
 	K := d.params.K
 	L := d.params.L
@@ -305,6 +308,7 @@ func (d *Dilithium) PackSig(z Vec, h Vec, hc []byte) []byte {
 	return sigP[:]
 }
 
+//UnpackSig unpacks a byte array into a signature. If the format is incorrect, nil objects are returned.
 func (d *Dilithium) UnpackSig(sig []byte) (Vec, Vec, []byte) {
 	K := d.params.K
 	L := d.params.L
