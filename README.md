@@ -1,7 +1,7 @@
 # Go Post Quantum Safe Lib
 
 This library offers a fast, secure, and easy to use implementation of the post-quantum candidates of the CRYSTALS suite.
-It contains Kyber, a key-encapsulation mechanism whose goal is to securly transmit symmetric key material over an insecure channel, and Dilithium, a digital signature algorithm that produces a signature that can be verified against a key, and can be used towards authentication or integrity. 
+It contains Kyber, a key-encapsulation mechanism whose goal is to securely transmit symmetric key material over an insecure channel, and Dilithium, a digital signature algorithm that produces a signature that can be verified against a key, and can be used towards authentication or integrity. 
 
 ## API
 
@@ -19,10 +19,10 @@ k := NewKyber512() //Creates a Kyber instance with light security level
 d := Dilithium3() //Creates a Dilithium instance with recommended/medium security level
 ```
 
-The newly created instance defines all parameters used internaly. In a second step, the user can now invoke our generic methods on an instance of Kyber or Dilithium. 
+The newly created instance defines all parameters used internally. In a second step, the user can now invoke our generic methods on an instance of Kyber or Dilithium. 
 
 ### Kyber
-The core functions of Kyber, a KEM, are a tuple KeyGen, Encaps, and Decaps. The key generation function returns a public key that can be openly disclosed, and a secret key that should remain private. The encapsulation function is used to generate and encrypt a shared secret given a public key. Secret that can be recovered using the associated secret key. No one excpet the secret key holder can recover the value of the shared secret.
+The core functions of Kyber, a KEM, are a tuple KeyGen, Encaps, and Decaps. The key generation function returns a public key that can be openly disclosed, and a secret key that should remain private. The encapsulation function is used to generate and encrypt a shared secret given a public key. Secret that can be recovered using the associated secret key. No one except the secret key holder can recover the value of the shared secret.
 
 Translated to code, a KEM protocol between Alice and Bob using our API looks like this:
 
@@ -43,7 +43,7 @@ ss := k.Decaps(sk, c) //Matches the value held by Bob
 
 ### Dilithium
 
-For Dilithium, the DSA, the main methods are KeyGen, Sign, and Verify, which very intuitively, correspond to the verification key (public) and signing key (secret) generation, the signature algorithm, and the verification algorithm. The signature, given a message and a signing key, produces a signature that is verifiable against the associated public verification key. Dilithium signatures are said to be unforgeable, menaing that it is extremely hard to create a valid signature without actually holding the signing key. In that case, Dilihtium can be used as an authentication mechanism, as a valid signature is the proof that the signer is the secret key holder. If the message is tampred, the signature will not verify anymore, so Dilithium can also be used to enforce message integrity.
+For Dilithium, the DSA, the main methods are KeyGen, Sign, and Verify, which very intuitively, correspond to the verification key (public) and signing key (secret) generation, the signature algorithm, and the verification algorithm. The signature, given a message and a signing key, produces a signature that is verifiable against the associated public verification key. Dilithium signatures are said to be unforgeable, meaning that it is extremely hard to create a valid signature without actually holding the signing key. In that case, Dilithium can be used as an authentication mechanism, as a valid signature is the proof that the signer is the secret key holder. If the message is tampered, the signature will not verify anymore, so Dilithium can also be used to enforce message integrity.
 
 Similarly, we can translate the Dilithium protocol to code. W.L.O.G, we choose Alice to be the signer, and Bob the verifier, and assume that they agreed on using the light security level.
 
@@ -65,7 +65,7 @@ verified := d.Verify(pk, sig, msg) //verified is true for honest executions
 
 A feature of Dilithium is to be available both in randomized or deterministic mode. When creating a Dilithium instance, a boolean is given as parameter to indicate which one to use. By default, the boolean is set to true, setting Dilithium to the randomized mode, but passing *false* as parameter will choose the deterministic mode.
 For example, `d := NewDilithium3(false)` will create a Dilithium instance with parameters set to the security level 3, and a deterministic signature.
-The signing and verification procedure is the same for both and follows the aforementionned flow.
+The signing and verification procedure is the same for both and follows the aforementioned flow.
 
 ### Random inputs
 
@@ -97,13 +97,13 @@ For applications where resources need to be allocated using constant-size struct
 
 ### Errors
 
-In order to keep the API pretty simple, any error will result in a *nil* ouptup (*false* is the case or *Verify*). For now the error is printed, but we are working on Log Levels.
+In order to keep the API pretty simple, any error will result in a *nil* output (*false* is the case or *Verify*). For now the error is printed, but we are working on Log Levels.
 
 ## Security
 
 Our library stands out because of its security properties. Among the vulnerabilities reported on the original implementation, we integrate countermeasures for most of them, providing a library that is both *theoretically* and *practically* secure. We predict that new attacks will be published as the candidates are refined, and expect changes in the code to occur as the security of our library is treated as a continuous process. 
 
-We recall that side-channel attacks are high-risk threats and encourage users to prefer libraries with strong implementation security, such as our library, over implementations that lack these guarrantees.
+We recall that side-channel attacks are high-risk threats and encourage users to prefer libraries with strong implementation security, such as our library, over implementations that lack these guarantees.
 
 ### Dashboard SCA (work in progress)
 
