@@ -1,0 +1,68 @@
+linters-settings:
+  goimports:
+    local-prefixes: github.com/kudelskisecurity/crystals-go
+
+linters:
+  disable-all: true
+  # pending (either enable and handle, or deliberately drop):
+  #  - deadcode
+  #  - errcheck
+  #  - gocritic
+  #  - godot
+  #  - gosec
+  #  - ifshort
+  #  - misspell
+  #  - paralleltest
+  #  - predeclared
+  #  - revive
+  #  - stylecheck
+  #  - testpackage
+  #  - thelper
+  #  - unconvert
+  #  - unused
+  #  - wastedassign
+  enable:
+    - asciicheck
+    - depguard
+    - dogsled
+    - dupl
+    - durationcheck
+    - errorlint
+    - exhaustive
+    - exportloopref
+    - forcetypeassert
+    - gci
+    - gochecknoinits
+    - goconst
+    - gocyclo
+    - godox
+    - goerr113
+    - gofmt
+    - goimports
+    - gomoddirectives
+    - gomodguard
+    - goprintffuncname
+    - gosimple
+    - govet
+    - importas
+    - ineffassign
+    - makezero
+    - nakedret
+    - nestif
+    - nilerr
+    - nolintlint
+    - prealloc
+    - rowserrcheck
+    - staticcheck
+    - structcheck
+    - tagliatelle
+    - tparallel
+    - typecheck
+    - unparam
+    - varcheck
+    - wrapcheck
+
+issues:
+  exclude-use-default: false # disable filtering of defaults for better zero-issue policy
+  max-per-linter: 0 # disable limit; report all issues of a linter
+  max-same-issues: 0 # disable limit; report all issues of the same issue
