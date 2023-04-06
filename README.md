@@ -49,7 +49,7 @@ Similarly, we can translate the Dilithium protocol to code. W.L.O.G, we choose A
 
 Alice starts by generating a key pair:
 ```go
-d := Dilithium2() //Creates a Dilithium instance with recommended security level
+d := Dilithium3() //Creates a Dilithium instance with recommended security level
 pk, sk := d.KeyGen()
 ```
 She can then sign a message of her choice using:
@@ -59,7 +59,7 @@ sig := d.Sign(sk, msg)
 ```
 Then transmit her public key, message, and signature to Bob for him to verify it with:
 ```go
-d := Dilithium2()
+d := Dilithium3()
 verified := d.Verify(pk, sig, msg) //verified is true for honest executions
 ```
 
