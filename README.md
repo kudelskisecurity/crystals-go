@@ -1,4 +1,4 @@
-![Abandoned](https://img.shields.io/badge/Status-Unmaintained)
+![Abandoned](https://img.shields.io/badge/Status-Unmaintained-blue)
 # Go Post Quantum Safe Lib
 
 This library offers a proof of concept for a fast and easy to use implementation of the post-quantum candidates of the CRYSTALS suite.
