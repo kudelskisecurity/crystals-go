@@ -162,16 +162,23 @@ func polyFromMsg(msg []byte) Poly {
 	return p
 }
 
-//polyToMsg converts a polynomial to a byte array
+//polyToMsg converts a polynomial to a byte array - fixed against https://kyberslash.cr.yp.to/faq.html
 func polyToMsg(p Poly) []byte {
 	msg := make([]byte, 32)
-	var t uint16
+	//var t uint16
+	var t uint32
 	var tmp byte
 	p.reduce()
 	for i := 0; i < n/8; i++ {
 		tmp = 0
 		for j := 0; j < 8; j++ {
-			t = (((uint16(p[8*i+j]) << 1) + uint16(q/2)) / uint16(q)) & 1
+			//t = (((uint16(p[8*i+j]) << 1) + uint16(q/2)) / uint16(q)) & 1
+			t = uint32(p[8*i+j])
+			t <<= 1
+			t += 1665
+			t *= 80635
+			t >>= 28
+			t &= 1
 			tmp |= byte(t << j)
 		}
 		msg[i] = tmp
