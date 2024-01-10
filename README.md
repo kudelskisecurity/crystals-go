@@ -6,7 +6,7 @@ It contains Kyber, a key-encapsulation mechanism whose goal is to securely trans
 
 ## DISCLAIMER
 
-This library was written as part of a MsC student project in the Cybersecurity Team at Kudelski Security. It is not actively maintained anymore, it probably contains bugs, vulnerabilities, and deviations from reference implementations. It is only intended for research and testing. We discourage its use in any production environment. Kudelski Security does not use this library as part of their commercial offers or product. If you are interested in continuing development feel free to fork it.
+This library was written as part of a MsC student project in the Cybersecurity Team at Kudelski Security. It is not actively maintained anymore. It is only intended for research and testing. We discourage its use in any production environment. Kudelski Security does not use this library as part of their commercial offers or product. If you are interested in continuing development feel free to fork it.
 
 ## API
 
