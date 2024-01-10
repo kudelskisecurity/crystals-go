@@ -1,7 +1,12 @@
+![Abandoned](https://img.shields.io/badge/Status-Unmaintained)
 # Go Post Quantum Safe Lib
 
-This library offers a fast, secure, and easy to use implementation of the post-quantum candidates of the CRYSTALS suite.
+This library offers a proof of concept for a fast and easy to use implementation of the post-quantum candidates of the CRYSTALS suite.
 It contains Kyber, a key-encapsulation mechanism whose goal is to securely transmit symmetric key material over an insecure channel, and Dilithium, a digital signature algorithm that produces a signature that can be verified against a key, and can be used towards authentication or integrity. 
+
+## DISCLAIMER
+
+This library was written as part of a MsC student project in the Cybersecurity Team at Kudelski Security. It is not actively maintained anymore, it probably contains bugs, vulnerabilities, and deviations from reference implementations. It is only intended for research and testing. We discourage its use in any production environment. Kudelski Security does not use this library as part of their commercial offers or product. If you are interested in continuing development feel free to fork it.
 
 ## API
 
@@ -99,13 +104,7 @@ For applications where resources need to be allocated using constant-size struct
 
 In order to keep the API pretty simple, any error will result in a *nil* output (*false* is the case or *Verify*). For now the error is printed, but we are working on Log Levels.
 
-## Security
-
-Our library stands out because of its security properties. Among the vulnerabilities reported on the original implementation, we integrate countermeasures for most of them, providing a library that is both *theoretically* and *practically* secure. We predict that new attacks will be published as the candidates are refined, and expect changes in the code to occur as the security of our library is treated as a continuous process. 
-
-We recall that side-channel attacks are high-risk threats and encourage users to prefer libraries with strong implementation security, such as our library, over implementations that lack these guarantees.
-
-### Dashboard SCA (work in progress)
+### Dashboard SCA (not updated)
 
 |    | Alg | Attack            | Paper                   | 
 | -- | ---- |----------------- |:----------------------- |
