@@ -297,11 +297,17 @@ func (p *Poly) compress(d int) []byte {
 		}
 	case 11:
 		var t [8]uint16
+		var d0 uint64 /* accumulation value for fixing KyberSlash2 */
 		id := 0
 		for i := 0; i < n/8; i++ {
 			for j := 0; j < 8; j++ {
-				t[j] = uint16(((uint32(p[8*i+j])<<11)+uint32(q)/2)/
-					uint32(q)) & ((1 << 11) - 1)
+				/* t[j] = uint16(((uint32(p[8*i+j])<<11)+uint32(q)/2)/
+					uint32(q)) & ((1 << 11) - 1) */
+				d0 = uint64(p[4*i+j]) << 11
+				d0 += 1664
+				d0 *= 645084
+				d0 >>= 31
+				t[j] = uint16(d0 & 0x7ff)
 			}
 			c[id] = byte(t[0])
 			c[id+1] = byte(t[0]>>8) | byte(t[1]<<3)
