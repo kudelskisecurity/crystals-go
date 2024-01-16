@@ -218,7 +218,7 @@ func (p *Poly) compress(d int) []byte {
 				d0 += 1665
 				d0 *= 80635
 				d0 >>= 28
-				t[j] = d0 & 0xf;
+				t[j] = uint16(d0 & 0xf)
 			}
 			c[id] = byte(t[0]) | byte(t[1]<<4)
 			c[id+1] = byte(t[2]) | byte(t[3]<<4)
