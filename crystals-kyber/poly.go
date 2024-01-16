@@ -303,7 +303,7 @@ func (p *Poly) compress(d int) []byte {
 			for j := 0; j < 8; j++ {
 				/* t[j] = uint16(((uint32(p[8*i+j])<<11)+uint32(q)/2)/
 					uint32(q)) & ((1 << 11) - 1) */
-				d0 = uint64(p[4*i+j]) << 11
+				d0 = uint64(p[8*i+j]) << 11
 				d0 += 1664
 				d0 *= 645084
 				d0 >>= 31
